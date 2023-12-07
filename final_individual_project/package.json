@@ -11,9 +11,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "format": "prettier --write ./",
-    "lint:js": "eslint ./*.js.jsx",
+    "lint": "eslint ./*.js.jsx",
     "prepare": "husky install",
-    "format&lint": "npm run lint:js && npm run format"
+    "formatAndLint": "npm run lint && npm run format"
   },
   "eslintConfig": {
     "extends": [
