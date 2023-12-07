@@ -1,1 +1,0 @@
-# final-individual-project-Skypro
