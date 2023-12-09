@@ -1,40 +1,47 @@
+import styles from '../../css/main.module.css'
+
+console.log(styles);
 export const MainPage = () => {
     return(
-        <div className="wrapper">
-  <div className="container">
-    <header className="header">
-      <nav className="header__nav">
-        <button className="header__btn-main-enter btn-hov01" id="btnMainEnter">
+        <div className={styles.wrapper}>
+  <div className={styles.container}>
+    <header className={styles.header}>
+      <nav className={styles.header__nav}>
+        <button className={styles.header__btn_main_enter}
+        //  styles.btn-hov01}
+          id="btnMainEnter">
           Вход в личный кабинет
         </button>
       </nav>
     </header>
-    <main className="main">
-      <div className="main__search search">
-        <a className="search__logo-link" href="#" target="_blank">
-          <img className="search__logo-img" src="img/logo.png" alt="logo" />
+    <main 
+    // className={styles.main}
+    >
+      <div className={styles.main__search}>
+        <a className={styles.search__logo_link} href="#" target="_blank">
+          <img className={styles.search__logo_img} src="img/logo.png" alt="logo" />
         </a>
-        <a className="search__logo-mob-link" href="#" target="_blank">
+        <a className={styles.search__logo_mob_link} href="#" target="_blank">
           <img
-            className="search__logo-mob-img"
+            className={styles.search__logo_mob_img}
             src="img/logo-mob.png"
             alt="logo"
           />
         </a>
-        <form className="search__form" action="#">
+        <form className={styles.search__form} action="#">
           <input
-            className="search__text"
+            className={styles.search__text}
             type="search"
             placeholder="Поиск по объявлениям"
             name="search"
           />
           <input
-            className="search__text-mob"
+            className={styles.search__text_mob}
             type="search"
             placeholder="Поиск"
             name="search-mob"
           />
-          <button className="search__btn btn-hov02">Найти</button>
+          <button className="styles.search__btn styles.btn-hov02">Найти</button>
         </form>
       </div>
       <div className="main__container">
