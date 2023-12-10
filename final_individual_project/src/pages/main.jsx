@@ -1,12 +1,14 @@
 import React from 'react'
 import classNames from 'classnames'
-import styles from '../../css/main.module.scss'
-import logo from '../../img/logo.png'
-import logoMobile from '../../img/logo-mob.png'
-import icon01 from '../../img/icon_01.png'
-import icon02 from '../../img/icon_02.png'
-import icon03 from '../../img/icon_03.png'
-import { Card } from 'components/card/card'
+import styles from '../css/main.module.scss'
+import logo from '../img/logo.png'
+import logoMobile from '../img/logo-mob.png'
+import icon01 from '../img/icon_01.png'
+import icon02 from '../img/icon_02.png'
+import icon03 from '../img/icon_03.png'
+// import { Card } from 'components/card/card'
+import { Profile } from './profile'
+import { MyButton } from 'components/button/button'
 
 // console.log(styles)
 
@@ -50,12 +52,14 @@ export const MainPage = () => (
               placeholder="Поиск"
               name="search-mob"
             />
-            <button className={classNames(styles.search__btn, styles.btnHov02)}>
+            {/* <button className={classNames(styles.search__btn, styles.btnHov02)}>
               Найти
-            </button>
+            </button> */}
+            <MyButton name={'Найти'} />
           </form>
         </div>
-        <div className={styles.main__container}>
+        <Profile />
+        {/* <div className={styles.main__container}>
           <h2 className={styles.main__h2}>Объявления</h2>
           <div className={styles.main__content}>
             <div className={classNames(styles.content__cards, styles.cards)}>
@@ -72,7 +76,7 @@ export const MainPage = () => (
               <Card />
             </div>
           </div>
-        </div>
+        </div> */}
       </main>
       <footer className={styles.footer}>
         <div className={styles.footer__container}>

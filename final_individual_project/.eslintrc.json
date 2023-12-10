@@ -24,8 +24,8 @@
       }
     ],
     "camelcase": ["error"],
-    "arrow-body-style": ["error", "as-needed"],
-    "prefer-arrow-callback": ["error", "as-needed"],
+    "arrow-body-style": ["error", "always"],
+    "prefer-arrow-callback": ["error", "always"],
     "strict": "error",
     "eqeqeq": ["error", "always"]
   }
