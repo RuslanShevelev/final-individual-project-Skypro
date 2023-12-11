@@ -1,52 +1,3 @@
-// * {
-//     margin: 0;
-//     padding: 0;
-//     box-sizing: border-box;
-// }
-
-// *:before,
-// *:after {
-//     box-sizing: border-box;
-// }
-
-// a,
-// a:visited {
-//     text-decoration: none;
-//     font-family: 'StratosSkyeng', sans-serif;
-//     cursor: pointer;
-// }
-
-// button,
-// ._btn {
-//     cursor: pointer;
-// }
-
-// ul li {
-//     list-style: none;
-// }
-
-
-
-//-------------------------------//
-
-// ========== fonts ========
-
-//--------------------------
-
-// html,
-// body {
-//     width: 100%;
-//     height: 100%;
-//     font-family: 'Roboto', sans-serif;
-//     color: #000000;
-
-// }
-
-// div,
-// button,
-// a {
-//     font-family: 'Roboto', sans-serif;
-// }
 
 .wrapper {
     width: 100%;    
@@ -64,66 +15,12 @@
     background-color: #FFFFFF;    
 }
 
-// ========== hover ========
-
-.btnHov01:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid #FFFFFF;
-}
-// .btnHov02:hover {
-//     background-color: #0080C1;
-// }
-
-// .main__h2 {
-//     &:hover::before {
-//         border-top: 2px solid #0080C1;
-//         border-left: 2px solid #0080C1;
-//     }
-// }
-
-// ========== activ ========
-
-
-
-
-
-// =================== header ====================//
-.header {
-
-    background-color: #009EE4;
-
-    &__nav {
-        max-width: 1178px;
-        margin: 0 auto;
-        padding: 0 10px;
-        height: 79px;
-        display: flex;
-        align-items: center;
-        justify-content: end;
-    }
-
-    &__btnMainEnter {
-        width: 224px;
-        height: 40px;
-        border: 1px solid #FFFFFF;
-        border-radius: 6px;
-        background-color: transparent;
-        color: #FFFFFF;
-        font-size: 16px;
-        line-height: 1;
-    }
-}
-
-
-// =================== main ====================//
 .main {
-
     &__container {
         max-width: 1178px;
         margin: 0 auto;
         padding: 52px 10px 37px;
     }
-
     &__search {
         width: 100%;
         display: flex;
@@ -132,10 +29,8 @@
         padding: 11px 0;        
         max-width: 1178px;
         margin: 0 auto;
-        padding: 31px 10px 0px;
+        padding: 43px 10px;
     }
-
-
     &__h2 {
         font-style: normal;
         font-weight: 500;
@@ -148,35 +43,33 @@
             border-left: 2px solid #0080C1;
         }
     }
-
     &__content {
         width: 100%;
         margin: 0 auto;
     }
-
-
 }
 .search {
-
-    &__logoMobLink {
-        display: none;
-    }
+    // &__logoMobLink {
+    //     display: none;
+    // }
     &__logo_img {
         width: 54px;
-        height: auto;
+        height: 50px;
+        background-image: url('../img/logo.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
     }
-
     &__form {
         margin-left: 60px;        
         max-width: 1044px;
         width: 100%;
         display: flex;
+        gap: 10px;
     }
-
     &__textMob {
         display: none;
     }
-
     &__text {
         width: 100%;
         height: 50px;
@@ -201,18 +94,6 @@
             line-height: 24px;            
         }
     }
-
-    // &__btn {
-    //     margin-left: 10px;
-    //     width: 158px;
-    //     height: 50px;
-    //     background-color: #009EE4;
-    //     border: 1px solid #009EE4;
-    //     border-radius: 6px;
-    //     font-size: 16px;
-    //     line-height: 24px;
-    //     color: #FFFFFF;
-    // }
 }
 
 
@@ -412,21 +293,21 @@
 
     .search {
 
-        &__logoMobLink {
-            display: block;
+        // &__logoMobLink {
+        //     display: block;
+        //     width: 32px;
+        //     height: 32px;
+        // }
+
+        // &__logoLink {
+        //     display: none;
+        // }
+
+        &__logo_img {
             width: 32px;
             height: 32px;
-        }
-
-        &__logoLink {
-            display: none;
-        }
-
-        &__logo_mob_img {
-            width: 32px;
-            height: auto;
-            display: block;
-            object-fit: cover;
+            border-radius: 50%;
+            background: #FFF url('../img/logo-mob.png') no-repeat center / cover;
         }
 
         &__form {
@@ -437,10 +318,6 @@
         }
 
         &__text {
-            display: none;
-        }
-
-        &__textMob {
             display: inline-block;
             width: 100%;
             height: 32px;
@@ -462,9 +339,12 @@
             }
         }
 
-        &__btn {
-            display: none;
-        }
+        // &__textMob {
+        // }
+
+        // &__btn {
+        //     display: none;
+        // }
     }
 
 
