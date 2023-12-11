@@ -7,7 +7,8 @@ import icon01 from '../img/icon_01.png'
 import icon02 from '../img/icon_02.png'
 import icon03 from '../img/icon_03.png'
 // import { Card } from 'components/card/card'
-import { Profile } from './profile'
+// import { Profile } from './profile'
+import { Article } from './article'
 import { MyButton } from 'components/button/button'
 import { Header } from 'components/header/header'
 import classNames from 'classnames'
@@ -64,7 +65,8 @@ export const MainPage = () => {
               />
             </form>
           </div>
-          <Profile />
+          <Article/>
+          {/* <Profile /> */}
           {/* <div className={styles.main__container}>
           <h2 className={styles.main__h2}>Объявления</h2>
           <div className={styles.main__content}>
