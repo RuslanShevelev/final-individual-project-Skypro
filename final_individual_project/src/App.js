@@ -1,10 +1,14 @@
 import React from 'react'
-import { MainPage } from './pages/main/main'
+import './css/app.css'
+
+import { MainPage } from './pages/main'
 
 function App() {
-  return <div className="App" >
-<MainPage/>
-  </div>
+  return (
+    <div className="App">
+      <MainPage />
+    </div>
+  )
 }
 
 export default App
