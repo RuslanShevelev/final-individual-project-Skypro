@@ -2,8 +2,8 @@ import { React, useState } from 'react'
 import styles from './header.module.scss'
 import classNames from 'classnames'
 
-export const Header = () => {
-  const [isAuth, setIsAuth] = useState(false)
+export const Header = ({ openModalAuth }) => {
+  const [isAuth] = useState(false)
 
   return (
     <header className={styles.header}>
@@ -21,7 +21,7 @@ export const Header = () => {
           className={classNames(styles.header__btnMainEnter, styles.btnHov01)}
           id="btnMainEnter"
           onClick={() => {
-            setIsAuth(!isAuth)
+            openModalAuth()
           }}
         >
           {isAuth ? 'Л' : 'Вход в л'}ичный кабинет

@@ -11,12 +11,17 @@ import classNames from 'classnames'
 
 export const Layout = () => {
   const [page, setPage] = useState('Main')
-  const [modal] = useState(true)
+  const [modal, setModal] = useState(false)
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <Header />
+        <Header
+          openModalAuth={() => {
+            setModal(true)
+          }}
+        />
+
         <main className={styles.main}>
           <div className={styles.main__search}>
             <a className={styles.search__logoLink} href="#" target="_blank">
@@ -42,7 +47,13 @@ export const Layout = () => {
             </form>
           </div>
           <Outlet />
-          {modal && <SignIn />}
+          {modal && (
+            <SignIn
+              closeModal={() => {
+                setModal(false)
+              }}
+            />
+          )}
         </main>
         <footer className={styles.footer}>
           <div className={styles.footer__container}>
