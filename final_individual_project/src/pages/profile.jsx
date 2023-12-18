@@ -19,7 +19,9 @@ export const Profile = ({ myProfile }) => {
               </h3>
             )}
             <div
-              className={classNames(styles.profile__settings, styles.settings)}
+              className={
+                myProfile ? styles.profile__settings : styles.profile__seller
+              }
             >
               <div className={styles.settings__left}>
                 <div className={styles.settings__img}>
@@ -37,8 +39,8 @@ export const Profile = ({ myProfile }) => {
                   </a>
                 )}
               </div>
-              <div className={styles.settings__right}>
-                {myProfile ? (
+              {myProfile ? (
+                <div className={styles.settings__right}>
                   <form className={styles.settings__form} action="#">
                     <div className={styles.settings__div}>
                       <label htmlFor="fname">Имя</label>
@@ -88,32 +90,29 @@ export const Profile = ({ myProfile }) => {
                       <MyButton name="Сохранить" />
                     </div>
                   </form>
-                ) : (
-                  <div className="seller__right">
-                    <h3 className="seller__title">Кирилл Матвеев</h3>
-                    <p className="seller__city">Санкт-Петербург</p>
-                    <p className="seller__inf">Продает товары с августа 2021</p>
-                    <div className="seller__img-mob-block">
-                      <div className="seller__img-mob">
-                        <a href="" target="_self">
-                          <img src="#" alt="" />
-                        </a>
-                      </div>
-                    </div>
-                    <button className="seller__btn btn-hov02">
-                      Показать&nbsp;телефон
-                      <span>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</span>
-                    </button>
+                </div>
+              ) : (
+                <>
+                  <div className={styles.seller__right}>
+                    <h3 className={styles.seller__title}>Кирилл Матвеев</h3>
+                    <p className={styles.seller__city}>Санкт-Петербург</p>
+                    <p className={styles.seller__inf}>
+                      Продает товары с августа 2021
+                    </p>
                   </div>
-                )}
-              </div>
+                  <button className={styles.seller__btn}>
+                    Показать&nbsp;телефон
+                    <span>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</span>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
-        <h3 className={classNames(styles.main__title, styles.title)}>
-          Мои товары
-        </h3>
       </div>
+      <h3 className={classNames(styles.main__title, styles.title)}>
+        Мои товары
+      </h3>
       <div className={styles.main__content}>
         <div className={classNames(styles.content__cards, styles.cards)}>
           <Card />

@@ -167,6 +167,13 @@
     font-weight: 700;
     margin-bottom: 20px;
   }
+  &__btnBlock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  
   &__btn {
     background-color: #009ee4;
     border-radius: 6px;

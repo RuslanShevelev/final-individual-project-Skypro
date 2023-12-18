@@ -1,8 +1,10 @@
 import React from 'react'
 import styles from '../css/article.module.scss'
 import classNames from 'classnames'
+import { MyButton } from 'components/button/button'
+import { Reviews } from 'modal/reviews'
 
-export const Article = () => {
+export const Article = ({ myArticle }) => {
   return (
     <>
       <div className={classNames(styles.main__artic, styles.artic)}>
@@ -69,12 +71,22 @@ export const Article = () => {
                 </a>
               </div>
               <p className={styles.article__price}>2 200 ₽</p>
-              <button
-                className={classNames(styles.article__btn, styles.btnHov02)}
-              >
-                Показать&nbsp;телефон
-                <span>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</span>
-              </button>
+              <div className={styles.article__btnBlock}>
+                {!myArticle ? (
+                  <button
+                    className={classNames(styles.article__btn, styles.btnHov02)}
+                  >
+                    Показать&nbsp;телефон
+                    <span>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</span>
+                  </button>
+                ) : (
+                  <>
+                    <MyButton name={'Редактировать'} />
+                    <MyButton name={'Снять с публикации'} />
+                  </>
+                )}
+              </div>
+
               <div
                 className={classNames(styles.article__author, styles.author)}
               >
@@ -90,6 +102,7 @@ export const Article = () => {
               </div>
             </div>
           </div>
+          <Reviews />
         </div>
       </div>
       <div className={styles.main__container}>
