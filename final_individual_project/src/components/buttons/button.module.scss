@@ -1,0 +1,65 @@
+.myButton {
+  // margin-left: 10px;
+  min-width: 158px;
+  // max-width: 241px;
+  min-height: 50px;
+  background-color: #009ee4;
+  border: 1px solid #009ee4;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #ffffff;
+  padding: 6px 37px;
+  &:hover {
+    background-color: #0080c1;
+  }
+  & span {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+.btnClose {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: #d9d9d9;
+    top: 47%;
+    right: -4px;
+  }
+  &::before {
+    transform: rotate(45deg);
+  }
+  &::after {
+    transform: rotate(-45deg);
+  }
+  &:hover {
+    &::after,
+    &::before {
+      background-color: #0080c1;
+    }
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .hide {
+    display: none;
+  }
+  .myButton {
+    font-size: 16px;
+    line-height: 1;
+    width: 100%;
+    height: 46px;
+  }
+  .btnClose {
+    display: none;
+ }
+}

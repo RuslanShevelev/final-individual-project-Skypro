@@ -22,8 +22,8 @@ export const AppRoutes = () => {
       children: [
         { path: '/', element: <MainPage /> },
         { path: '/myProfile', element: <Profile myProfile /> },
-        { path: '/profile', element: <Profile /> },
-        { path: '/article', element: <Article /> },
+        { path: '/profile/:id', element: <Profile /> },
+        { path: '/article/:id', element: <Article /> },
         { path: '/myArticle', element: <Article myArticle /> },
         // { path: '/login', element: <SignIn /> },
       ],

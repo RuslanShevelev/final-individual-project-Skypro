@@ -1,0 +1,225 @@
+.containerBg {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: 100vh;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnHov02:hover {
+  background-color: #0080c1;
+}
+
+.modal__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 800px;
+  height: auto;
+  padding: 20px 66px 57px 50px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  position: relative;
+}
+.modal__title {
+  font-size: 32px;
+  line-height: 46px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 15px;
+}
+.modal__btnClose {
+  width: 23px;
+  height: 23px;
+  position: absolute;
+  top: 47px;
+  right: 50px;
+  z-index: 3;
+  cursor: pointer;
+}
+.modal__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
+  width: 100%;
+  overflow-y: auto;
+  scrollbar-color: #ffffff #2e2e2e;
+  scrollbar-width: thin;
+  scrollbar-width: 6px;
+}
+.modal__scroll::-webkit-scrollbar {
+  width: 6px;
+  background-color: #ffffff;
+}
+.modal__scroll::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 3px;
+}
+.modal__formNewArt {
+  margin-top: 5px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.modal__reviews {
+  width: 100%;
+  height: 495px;
+}
+
+.formNewArt__block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+.formNewArt label {
+  margin-bottom: 14px;
+  font-size: 16px;
+  line-height: 32px;
+  font-weight: 600;
+  color: #000000;
+}
+.formNewArt__area {
+  font-family: "Roboto", sans-serif;
+  padding: 10px 19px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1;
+  width: 100%;
+  height: 100px;
+  max-height: 100px;
+}
+.formNewArt__area::-moz-placeholder {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.3019607843);
+}
+.formNewArt__area::placeholder {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0.3019607843);
+}
+.formNewArt__btnPub {
+  width: 181px;
+  height: 50px;
+  background: #d9d9d9;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+}
+
+@media screen and (max-width: 890px) {
+  .modal__content {
+    width: 590px;
+  }
+}
+@media screen and (max-width: 590px) {
+  .modal__block {
+    position: fixed;
+    top: 55px;
+    bottom: 54px;
+    left: 0px;
+    right: 0;
+    width: auto;
+    height: auto;
+    z-index: 3;
+  }
+  .modal__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 320px;
+    height: 100vh;
+    border-radius: 0;
+    padding: 30px 20px 30px;
+  }
+  .modal__title {
+    font-size: 24px;
+    line-height: 29px;
+    padding: 0 0 0 26px;
+    position: relative;
+  }
+  .modal__title::before {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: transparent;
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 9px;
+    left: 0;
+    cursor: pointer;
+  }
+  .modal__scroll {
+    scrollbar-width: thin;
+    scrollbar-width: 0px;
+  }
+  .modal__scroll::-webkit-scrollbar {
+    width: 0px;
+  }
+  .modal__scroll::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+  }
+  .modal__formNewArt {
+    margin-top: 22px;
+  }
+  .modal__reviews {
+    height: 58vh;
+  }
+  .formNewArt__block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+  .formNewArt label {
+    display: none;
+  }
+  .formNewArt__area {
+    font-family: "Roboto", sans-serif;
+    width: 100%;
+    max-height: 107px;
+    padding: 9px 17px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .formNewArt__area::-moz-placeholder {
+    font-size: 14px;
+    line-height: 21px;
+    color: #c4c4c4;
+  }
+  .formNewArt__area::placeholder {
+    font-size: 14px;
+    line-height: 21px;
+    color: #c4c4c4;
+  }
+  .formNewArt__btnPub {
+    margin-top: 0px;
+    width: 100%;
+    height: 46px;
+    background-color: #009ee4;
+  }
+}/*# sourceMappingURL=reviews.module.css.map */

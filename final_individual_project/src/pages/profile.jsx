@@ -1,10 +1,32 @@
-import React from 'react'
+import { React, useState } from 'react'
 import styles from '../css/profile.module.scss'
 import classNames from 'classnames'
-import { Card } from 'components/card/card'
-import { MyButton } from 'components/button/button'
+import { useParams } from 'react-router-dom'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale'
+import Skeleton from 'react-loading-skeleton'
+
+// import { useDispatch } from 'react-redux'
+// import { getUserArts } from 'store/slices/modalsSlice'
+// import { Card } from 'components/card/card'
+import { MyButton } from 'components/buttons/button'
+import { useFetchAllArticlesQuery } from 'services/appService'
 
 export const Profile = ({ myProfile }) => {
+  const params = useParams()
+  // const dispatch = useDispatch()
+  const { data, isLoading } = useFetchAllArticlesQuery(Number(params.id))
+  const [phoneVisibility, setPhoneVisibility] = useState(false)
+
+  // useEffect(() => {
+  //   if (params) {
+  //     dispatch(getUserArts(Number(params.id)))
+  //   }
+  // }, [])
+  const user = data ? data[0]?.user : null
+  console.log(user)
+  console.log(isLoading)
+
   return (
     <div className={styles.main__container}>
       <div className={styles.main__centerBlock}>
@@ -24,11 +46,16 @@ export const Profile = ({ myProfile }) => {
               }
             >
               <div className={styles.settings__left}>
-                <div className={styles.settings__img}>
-                  <a href="" target="_self">
-                    <img src="#" alt="" />
-                  </a>
-                </div>
+                {isLoading ? (
+                  <Skeleton width={170} height={170} circle />
+                ) : (
+                  <div
+                    className={styles.settings__img}
+                    style={{
+                      backgroundImage: `url("http://localhost:8090/${user?.avatar}")`,
+                    }}
+                  />
+                )}
                 {myProfile && (
                   <a
                     className={styles.settings__changePhoto}
@@ -94,16 +121,38 @@ export const Profile = ({ myProfile }) => {
               ) : (
                 <>
                   <div className={styles.seller__right}>
-                    <h3 className={styles.seller__title}>Кирилл Матвеев</h3>
-                    <p className={styles.seller__city}>Санкт-Петербург</p>
+                    <h3 className={styles.seller__title}>
+                      {isLoading ? <Skeleton /> : user?.name}
+                    </h3>
+                    <p className={styles.seller__city}>
+                      {isLoading ? <Skeleton /> : user?.city}
+                    </p>
                     <p className={styles.seller__inf}>
-                      Продает товары с августа 2021
+                      {user ? (
+                        `Продает товары с ${format(
+                          new Date(user?.sells_from),
+                          'MMMM yyyy',
+                          {
+                            locale: ru,
+                          },
+                        )}`
+                      ) : (
+                        <Skeleton />
+                      )}
                     </p>
                   </div>
                   <button className={styles.seller__btn}>
                     Показать&nbsp;телефон
                     <span>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</span>
                   </button>
+                  <MyButton
+                    name={`${phoneVisibility ? 'Скрыть' : 'Показать'} телефон`}
+                    phone={user?.phone}
+                    phoneVisibility={phoneVisibility}
+                    action={() => {
+                      setPhoneVisibility(!phoneVisibility)
+                    }}
+                  />
                 </>
               )}
             </div>
@@ -115,12 +164,12 @@ export const Profile = ({ myProfile }) => {
       </h3>
       <div className={styles.main__content}>
         <div className={classNames(styles.content__cards, styles.cards)}>
+          {/* <Card />
           <Card />
           <Card />
           <Card />
           <Card />
-          <Card />
-          <Card />
+          <Card /> */}
         </div>
       </div>
     </div>

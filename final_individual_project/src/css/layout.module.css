@@ -1,0 +1,171 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.main__search {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  max-width: 1178px;
+  margin: 0 auto;
+  padding: 43px 10px;
+}
+
+.search__logo_img {
+  width: 54px;
+  height: 50px;
+  background-image: url("../img/logo.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.search__form {
+  margin-left: 60px;
+  max-width: 1044px;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+.search__textMob {
+  display: none;
+}
+.search__text {
+  width: 100%;
+  height: 50px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background-color: transparent;
+  padding: 13px 19px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+}
+.search__text::-moz-placeholder {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.3);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+.search__text::placeholder {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.3);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.footer {
+  display: none;
+}
+
+@media screen and (max-width: 590px) {
+  .container {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: #ffffff;
+  }
+  .main__search {
+    width: 100%;
+    height: 55px;
+    background-color: #009ee4;
+    box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0px;
+    padding: 11px 17px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 3;
+  }
+  .search__logo_img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #fff url("../img/logo-mob.png") no-repeat center/cover;
+  }
+  .search__form {
+    margin-left: 10px;
+    max-width: 1044px;
+    width: 100%;
+    display: flex;
+  }
+  .search__text {
+    display: inline-block;
+    width: 100%;
+    height: 32px;
+    border: none;
+    border-radius: 30px;
+    background-color: #ffffff;
+    padding: 5px 17px;
+    font-size: 14px;
+    line-height: 21px;
+    color: #000000;
+  }
+  .search__text::-moz-placeholder {
+    background-color: transparent;
+    color: #b3b3b3;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+  }
+  .search__text::placeholder {
+    background-color: transparent;
+    color: #b3b3b3;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 21px;
+  }
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 54px;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.1);
+  }
+  .footer__container {
+    width: 225px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer__img {
+    width: 42px;
+    height: 42px;
+  }
+  .footer__img img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    -o-object-fit: cover;
+       object-fit: cover;
+  }
+}/*# sourceMappingURL=layout.module.css.map */

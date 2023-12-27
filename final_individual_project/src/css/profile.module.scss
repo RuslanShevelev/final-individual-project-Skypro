@@ -80,13 +80,7 @@
     height: 170px;
     border-radius: 50%;
     background-color: #f0f0f0;
-
-    & img {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: cover;
-    }
+    background-size: cover;
   }
 
   &__changePhoto {
