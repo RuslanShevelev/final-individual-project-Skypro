@@ -1,10 +1,161 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setCurrentModal } from 'store/slices/modalsSlice'
 import styles from '../css/signin.module.scss'
 import classNames from 'classnames'
 import { CloseButton } from 'components/buttons/closebutton'
+import {
+  useGetRegistrationMutation,
+  useLoginUserMutation,
+} from 'services/appService'
+import { Loader } from 'components/loader/loader'
 
 export const SignIn = () => {
   const [regForm, setRegForm] = useState(false)
+  const [regData, setRegData] = useState({ role: 'user' })
+  const [control, setControl] = useState('')
+  const [usedEmailInput, setUsedEmailInput] = useState(false)
+  const [usedPasswordInput, setUsedPasswordInput] = useState(false)
+  const [usedControlInput, setUsedControlInput] = useState(false)
+  const [emailError, setEmailError] = useState('Введите электронную почту')
+  const [passwordError, setPasswordError] = useState('Введите пароль')
+  const [controlError, setControlError] = useState('Введите пароль повторно')
+  const [validForm, setValidForm] = useState(false)
+  const [apiErrors, setApiError] = useState(null)
+  const [registerUser, result] = useGetRegistrationMutation()
+  const [loginUser, data] = useLoginUserMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  // console.log(data)
+  useEffect(() => {
+    if (regForm) {
+      if (emailError || passwordError || controlError) {
+        setValidForm(false)
+      } else {
+        setValidForm(true)
+      }
+    } else if (emailError || passwordError) {
+      setValidForm(false)
+    } else {
+      setValidForm(true)
+    }
+  }, [
+    emailError,
+    passwordError,
+    controlError,
+    setEmailError,
+    setPasswordError,
+    regForm,
+  ])
+
+  useEffect(() => {
+    if (apiErrors) {
+      if (apiErrors.email) {
+        setEmailError(apiErrors.email[0])
+      } else {
+        setEmailError('')
+      }
+      if (apiErrors.detail) {
+        setControlError(apiErrors.detail)
+      } else {
+        setControlError('')
+      }
+      if (apiErrors.password) {
+        if (apiErrors.password.length > 1) {
+          setControlError(apiErrors.password[1])
+          setPasswordError(apiErrors.password[0])
+        } else {
+          setPasswordError(apiErrors.password)
+        }
+      } else {
+        setPasswordError('')
+      }
+    }
+  }, [apiErrors, setEmailError, setPasswordError, setControlError])
+
+  const inputHandler = (e) => {
+    switch (e.target.name) {
+      case 'email':
+        setRegData({ ...regData, email: e.target.value })
+        // eslint-disable-next-line no-case-declarations
+        const re =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (!re.test(String(e.target.value).toLowerCase())) {
+          setEmailError('Некорректный email')
+          if (!e.target.value) {
+            setEmailError('Введите электронную почту')
+          }
+        } else {
+          setEmailError('')
+        }
+        break
+      case 'password':
+        setRegData({ ...regData, password: e.target.value })
+        if (e.target.value.length < 8) {
+          setPasswordError('Пароль не менее 8 символов')
+          if (!e.target.value) {
+            setPasswordError('Введите пароль')
+          }
+        } else {
+          setPasswordError('')
+        }
+        break
+      case 'control':
+        setControl(e.target.value)
+        if (e.target.value === regData.password) {
+          setControlError('')
+        } else {
+          setControlError('Пароли должны совпадать')
+          if (!e.target.value) {
+            setControlError('Введите пароль повторно')
+          }
+        }
+        break
+      case 'name':
+        setRegData({ ...regData, name: e.target.value })
+        break
+      case 'last-name':
+        setRegData({ ...regData, surname: e.target.value })
+        break
+      case 'city':
+        setRegData({ ...regData, city: e.target.value })
+        break
+
+      default:
+        break
+    }
+  }
+
+  const blurHandler = (e) => {
+    switch (e.target.name) {
+      case 'email':
+        setUsedEmailInput(true)
+        break
+      case 'password':
+        setUsedPasswordInput(true)
+        break
+      case 'control':
+        setUsedControlInput(true)
+        break
+      default:
+        break
+    }
+  }
+  useEffect(() => {
+    if (data.isSuccess) {
+      dispatch(setCurrentModal(''))
+      navigate(`/myProfile`, {
+        replace: true,
+      })
+    }
+    if (data.isError) {
+      setApiError(data.error.data)
+      // console.log(data)
+      // console.log(apiErrors)
+    }
+  }, [data])
+
   return (
     // <div className={styles.wrapper}>
     <div className={styles.container_enter}>
@@ -100,69 +251,132 @@ export const SignIn = () => {
               </defs>
             </svg>
           </div>
-          <input
-            className={classNames(styles.modal__input, styles.login)}
-            type="text"
-            name="login"
-            id="formlogin"
-            placeholder="email"
-          />
-          <input
-            className={classNames(styles.modal__input, styles.password)}
-            type="password"
-            name="password"
-            id="formpassword"
-            placeholder="Пароль"
-          />
-          {regForm && (
+          {result.isLoading || data.isLoading ? (
+            <Loader />
+          ) : (
             <>
               <input
-                className={classNames(
-                  styles.modal__input,
-                  styles.passwordDouble,
-                )}
+                // value={email}
+                className={classNames(styles.modal__input, styles.login)}
+                onChange={(e) => {
+                  return inputHandler(e)
+                }}
+                type="text"
+                name="email"
+                // id="formlogin"
+                placeholder="email"
+                onBlur={(e) => {
+                  blurHandler(e)
+                }}
+              />
+              {usedEmailInput && emailError && (
+                <div className={styles.modal__error}>{emailError}</div>
+              )}
+              <input
+                className={classNames(styles.modal__input, styles.password)}
+                // value={password}
+                onChange={(e) => {
+                  inputHandler(e)
+                }}
                 type="password"
                 name="password"
-                id="passwordSecond"
-                placeholder="Повторите пароль"
+                placeholder="Пароль"
+                onBlur={(e) => {
+                  blurHandler(e)
+                }}
               />
-              <input
-                className={classNames(styles.modal__input, styles.firstName)}
-                type="text"
-                name="first-name"
-                id="first-name"
-                placeholder="Имя (необязательно)"
-              />
-              <input
-                className={classNames(styles.modal__input, styles.firstLast)}
-                type="text"
-                name="first-last"
-                id="first-last"
-                placeholder="Фамилия (необязательно)"
-              />
-              <input
-                className={classNames(styles.modal__input, styles.city)}
-                type="text"
-                name="city"
-                id="city"
-                placeholder="Город (необязательно)"
-              />
+              {usedPasswordInput && passwordError && (
+                <div className={styles.modal__error}>{passwordError}</div>
+              )}
+              {regForm && (
+                <>
+                  <input
+                    className={classNames(
+                      styles.modal__input,
+                      styles.passwordDouble,
+                    )}
+                    value={control}
+                    onChange={(e) => {
+                      return inputHandler(e)
+                    }}
+                    type="password"
+                    name="control"
+                    placeholder="Повторите пароль"
+                    onBlur={(e) => {
+                      blurHandler(e)
+                    }}
+                  />
+                  {(regForm
+                    ? usedControlInput && controlError
+                    : apiErrors?.detail) && (
+                    <div className={styles.modal__error}>{controlError}</div>
+                  )}
+                  <input
+                    className={classNames(
+                      styles.modal__input,
+                      styles.firstName,
+                    )}
+                    onChange={(e) => {
+                      inputHandler(e)
+                    }}
+                    type="text"
+                    name="name"
+                    placeholder="Имя (необязательно)"
+                  />
+                  <input
+                    className={classNames(
+                      styles.modal__input,
+                      styles.firstLast,
+                    )}
+                    type="text"
+                    name="last-name"
+                    placeholder="Фамилия (необязательно)"
+                    onChange={(e) => {
+                      inputHandler(e)
+                    }}
+                  />
+                  <input
+                    className={classNames(styles.modal__input, styles.city)}
+                    type="text"
+                    name="city"
+                    placeholder="Город (необязательно)"
+                    onChange={(e) => {
+                      inputHandler(e)
+                    }}
+                  />
+                </>
+              )}
+              {/* <MyButton name={regForm ? 'Зарегистрироваться' : 'Войти'} /> */}
+
+              <button
+                className={styles.modal__btnEnter}
+                disabled={!validForm}
+                type="button"
+                onClick={() => {
+                  if (regForm) {
+                    registerUser(regData)
+                  } else {
+                    loginUser(regData)
+                  }
+                }}
+              >
+                {regForm ? 'Зарегистрироваться' : 'Войти'}
+              </button>
+              {!regForm && (
+                <button
+                  className={styles.modal__btnSignup}
+                  onClick={() => {
+                    setRegForm(true)
+                  }}
+                  id="btnSignUp"
+                >
+                  Зарегистрироваться
+                </button>
+              )}
             </>
           )}
-
-          <button className={styles.modal__btnEnter} id="btnEnter">
-            {regForm ? 'Зарегистрироваться' : 'Войти'}
-          </button>
-          {!regForm && (
-            <button
-              className={styles.modal__btnSignup}
-              onClick={() => {
-                setRegForm(true)
-              }}
-              id="btnSignUp"
-            >
-              Зарегистрироваться
-            </button>
+          {apiErrors && (
+            <div className={styles.modal__error}>{apiErrors?.detail}</div>
           )}
         </form>
       </div>

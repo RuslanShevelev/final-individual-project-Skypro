@@ -1,6 +1,7 @@
 import { React, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { findArticles } from 'store/slices/modalsSlice'
+import { Outlet, useNavigate } from 'react-router-dom'
 import styles from '../css/layout.module.scss'
 import icon01 from '../img/icon_01.png'
 import icon02 from '../img/icon_02.png'
@@ -10,15 +11,24 @@ import { Header } from 'components/header/header'
 import { AddOrChangeArticle } from 'modal/addnewarticle'
 import { SignIn } from 'modal/signin'
 import { Reviews } from 'modal/reviews'
+import { UploadImage } from 'modal/upload-image/upload_image'
 import { SkeletonTheme } from 'react-loading-skeleton'
-import classNames from 'classnames'
+import { useFetchAllArticlesQuery } from 'services/appService'
 
 export const Layout = () => {
-  const [page, setPage] = useState('Main')
+  useFetchAllArticlesQuery()
+  const dispatch = useDispatch()
+  // const [page, setPage] = useState('Main')
+  const page = useSelector((state) => {
+    return state.modals.currentPage
+  })
   const modal = useSelector((state) => {
     return state.modals.currentModal
   })
+  const navigate = useNavigate()
+  const [search, setSearch] = useState('')
 
+  // console.log(params)
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
@@ -35,13 +45,21 @@ export const Layout = () => {
                   type="search"
                   placeholder="Поиск по объявлениям"
                   name="search"
+                  onChange={(e) => {
+                    setSearch(e.target.value === '' ? 'clear' : e.target.value)
+                  }}
                 />
               )}
               <MyButton
-                className={classNames(styles.search__btn)}
                 name={page === 'Main' ? 'Найти' : 'Вернуться на главную'}
                 action={() => {
-                  setPage('Profile')
+                  if (page === 'Main') {
+                    dispatch(findArticles(search))
+                  }
+                  navigate(`/`, {
+                    replace: false,
+                  })
+                  // setPage('Main')
                 }}
                 hideable
               />
@@ -56,6 +74,7 @@ export const Layout = () => {
             {modal === 'authModal' && <SignIn />}
             {modal === 'newArticleModal' && <AddOrChangeArticle />}
             {modal === 'reviewsModal' && <Reviews />}
+            {modal === 'uploadImage' && <UploadImage />}
           </div>
         )}
         <footer className={styles.footer}>

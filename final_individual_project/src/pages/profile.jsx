@@ -1,37 +1,49 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import styles from '../css/profile.module.scss'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import Skeleton from 'react-loading-skeleton'
-
-// import { useDispatch } from 'react-redux'
-// import { getUserArts } from 'store/slices/modalsSlice'
-// import { Card } from 'components/card/card'
+import { setCurrentPage, setCurrentModal } from 'store/slices/modalsSlice'
+import { useDispatch } from 'react-redux'
+import { Card } from 'components/card/card'
 import { MyButton } from 'components/buttons/button'
-import { useFetchAllArticlesQuery } from 'services/appService'
+import {
+  useGetArticlesByUserIdQuery,
+  useGetCredentialsQuery,
+} from 'services/appService'
 
-export const Profile = ({ myProfile }) => {
+export const Profile = ({ auth }) => {
   const params = useParams()
-  // const dispatch = useDispatch()
-  const { data, isLoading } = useFetchAllArticlesQuery(Number(params.id))
+  const dispatch = useDispatch()
+  const [myProfile] = useState(auth)
+  const { data: credentials } = useGetCredentialsQuery()
+  console.log(credentials)
+  const { data, isLoading } = useGetArticlesByUserIdQuery(
+    myProfile && credentials ? credentials?.id : Number(params.id),
+  )
   const [phoneVisibility, setPhoneVisibility] = useState(false)
+  console.log(data)
+  useEffect(() => {
+    dispatch(setCurrentPage(myProfile ? 'myProfile' : 'Profile'))
+  }, [])
 
   // useEffect(() => {
-  //   if (params) {
-  //     dispatch(getUserArts(Number(params.id)))
+  //   if (Number(params.id) === 2) {
+  //     setMyProfile(true)
   //   }
-  // }, [])
+  // }, [params])
   const user = data ? data[0]?.user : null
-  console.log(user)
-  console.log(isLoading)
+  console.log(myProfile)
 
   return (
     <div className={styles.main__container}>
       <div className={styles.main__centerBlock}>
         <h2 className={styles.main__h2}>
-          {myProfile ? 'Здравствуйте, Антон!' : 'Профиль продавца'}
+          {myProfile
+            ? `Здравствуйте, ${credentials?.name}!`
+            : 'Профиль продавца'}
         </h2>
         <div className={classNames(styles.main__profile, styles.profile)}>
           <div className={styles.profile__content}>
@@ -52,18 +64,21 @@ export const Profile = ({ myProfile }) => {
                   <div
                     className={styles.settings__img}
                     style={{
-                      backgroundImage: `url("http://localhost:8090/${user?.avatar}")`,
+                      backgroundImage: `url("http://localhost:8090/${
+                        myProfile ? credentials?.avatar : user.avatar
+                      }")`,
                     }}
                   />
                 )}
                 {myProfile && (
-                  <a
+                  <p
                     className={styles.settings__changePhoto}
-                    href=""
-                    target="_self"
+                    onClick={() => {
+                      dispatch(setCurrentModal('uploadImage'))
+                    }}
                   >
-                    Заменить
-                  </a>
+                    {credentials?.avatar ? 'Заменить' : 'Загрузите фото'}
+                  </p>
                 )}
               </div>
               {myProfile ? (
@@ -73,10 +88,10 @@ export const Profile = ({ myProfile }) => {
                       <label htmlFor="fname">Имя</label>
                       <input
                         className={styles.settings__fName}
-                        id="settings-fname"
+                        // id="settings-fname"
                         name="fname"
                         type="text"
-                        defaultValue="Антон"
+                        defaultValue={credentials?.name}
                         placeholder=""
                       />
                     </div>
@@ -84,10 +99,10 @@ export const Profile = ({ myProfile }) => {
                       <label htmlFor="lname">Фамилия</label>
                       <input
                         className={styles.settings__lName}
-                        id="settings-lname"
+                        // id="settings-lname"
                         name="lname"
                         type="text"
-                        defaultValue="Городецкий"
+                        defaultValue={credentials?.surname}
                         placeholder=""
                       />
                     </div>
@@ -95,10 +110,10 @@ export const Profile = ({ myProfile }) => {
                       <label htmlFor="city">Город</label>
                       <input
                         className={styles.settings__city}
-                        id="settings-city"
+                        // id="settings-city"
                         name="city"
                         type="text"
-                        defaultValue="Санкт-Петербург"
+                        defaultValue={credentials?.city}
                         placeholder=""
                       />
                     </div>
@@ -109,8 +124,8 @@ export const Profile = ({ myProfile }) => {
                         id="settings-phone"
                         name="phone"
                         type="tel"
-                        defaultValue={89161234567}
-                        placeholder={+79161234567}
+                        defaultValue={credentials?.phone}
+                        placeholder={'Введите номер телефона'}
                       />
                     </div>
                     <div className={styles.settings__btn}>
@@ -141,13 +156,12 @@ export const Profile = ({ myProfile }) => {
                       )}
                     </p>
                   </div>
-                  <button className={styles.seller__btn}>
-                    Показать&nbsp;телефон
-                    <span>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</span>
-                  </button>
                   <MyButton
-                    name={`${phoneVisibility ? 'Скрыть' : 'Показать'} телефон`}
+                    name={`${phoneVisibility ? 'Скрыть' : 'Показать'} ${
+                      user?.phone ? 'телефон' : 'e-mail'
+                    }`}
                     phone={user?.phone}
+                    email={user?.phone ? null : user?.email}
                     phoneVisibility={phoneVisibility}
                     action={() => {
                       setPhoneVisibility(!phoneVisibility)
@@ -160,17 +174,30 @@ export const Profile = ({ myProfile }) => {
         </div>
       </div>
       <h3 className={classNames(styles.main__title, styles.title)}>
-        Мои товары
+        {myProfile && data?.length > 0
+          ? 'Мои товары'
+          : myProfile && data?.length === 0
+            ? 'У вас пока нет товаров для продажи'
+            : 'Товары продавца'}
       </h3>
       <div className={styles.main__content}>
-        <div className={classNames(styles.content__cards, styles.cards)}>
-          {/* <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card /> */}
-        </div>
+        {data?.length > 0 && (
+          <ul className={classNames(styles.content__cards, styles.cards)}>
+            {data.map((art) => {
+              return (
+                <Card
+                  key={art.id}
+                  id={art.id}
+                  title={art.title}
+                  created={art.created_on}
+                  price={art.price}
+                  city={art.user.city}
+                  img={art?.images[0]?.url}
+                />
+              )
+            })}
+          </ul>
+        )}
       </div>
     </div>
   )

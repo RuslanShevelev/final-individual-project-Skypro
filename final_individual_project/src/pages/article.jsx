@@ -1,7 +1,12 @@
 import { React, useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
-import { setCurrentModal } from 'store/slices/modalsSlice'
+import {
+  setCurrentModal,
+  setCurrentPage,
+  setCurrentArt,
+  setComments,
+} from 'store/slices/modalsSlice'
 import styles from '../css/article.module.scss'
 import classNames from 'classnames'
 import Skeleton from 'react-loading-skeleton'
@@ -9,27 +14,38 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { formatRelative, format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { MyButton } from 'components/buttons/button'
-import {
-  useGetArticleByIdQuery,
-  useGetCommentsByIdQuery,
-} from 'services/appService'
-// import { addOrChangeArticle } from 'modal/addnewarticle'
+import { useGetCommentsByIdQuery } from 'services/appService'
+import noPhoto from '../img/no-image-large.png'
 
 export const Article = ({ myArticle }) => {
-  // const [reviews, setReviews] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const params = useParams()
-  const data = useGetArticleByIdQuery(Number(params.id)).data
   const comments = useGetCommentsByIdQuery(Number(params.id)).data
   const [phoneVisibility, setPhoneVisibility] = useState(false)
-  const [activeArticle, setActiveArticle] = useState(null)
+  const [activeImg, setActiveImg] = useState(null)
+  const { currentArt: data, loading } = useSelector((state) => {
+    return state.modals
+  })
+  useEffect(() => {
+    if (!loading) {
+      dispatch(setCurrentPage('Article'))
+    }
+    dispatch(setCurrentArt(Number(params.id)))
+  }, [loading])
 
   useEffect(() => {
     if (data?.images[0]) {
-      setActiveArticle(data.images[0])
+      setActiveImg(data.images[0])
+    }
+    return () => {
+      setActiveImg(null)
     }
   }, [data])
+
+  useEffect(() => {
+    dispatch(setComments(comments))
+  }, [comments])
 
   const commentsNumber = (num) => {
     const string = num?.toString()
@@ -61,7 +77,11 @@ export const Article = ({ myArticle }) => {
               <div className={styles.article__img}>
                 {data ? (
                   <img
-                    src={`http://localhost:8090/${activeArticle?.url}`}
+                    src={
+                      activeImg
+                        ? `http://localhost:8090/${activeImg?.url}`
+                        : noPhoto
+                    }
                     alt="active image"
                   />
                 ) : (
@@ -75,7 +95,7 @@ export const Article = ({ myArticle }) => {
                         <li
                           key={item.id}
                           className={
-                            item.url === activeArticle?.url
+                            item.url === activeImg?.url
                               ? classNames(
                                   styles.article__imgBarDiv,
                                   styles.article__imgBarDiv_active,
@@ -83,7 +103,7 @@ export const Article = ({ myArticle }) => {
                               : styles.article__imgBarDiv
                           }
                           onClick={() => {
-                            return setActiveArticle(item)
+                            return setActiveImg(item)
                           }}
                         >
                           <img
@@ -217,7 +237,7 @@ export const Article = ({ myArticle }) => {
                     className={styles.author__name}
                     onClick={() => {
                       navigate(`/profile/${data?.user?.id}`, {
-                        replace: false,
+                        replace: true,
                       })
                     }}
                   >

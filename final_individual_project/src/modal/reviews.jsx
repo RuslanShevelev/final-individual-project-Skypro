@@ -4,12 +4,14 @@ import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { CloseButton } from 'components/buttons/closebutton'
 import { Comment } from 'components/comment/comment'
+import { useAuth } from 'hooks/use-auth'
 
 export const Reviews = ({ close }) => {
   const data = useSelector((state) => {
     return state.modals.comments
   })
-  console.log(data)
+  const { isAuth } = useAuth()
+  // console.log(data)
   return (
     <div className={styles.containerBg}>
       <div className={styles.modal__block}>
@@ -19,36 +21,38 @@ export const Reviews = ({ close }) => {
             <CloseButton />
           </div>
           <div className={styles.modal}>
-            <form
-              className={classNames(
-                styles.modal__formNewArt,
-                styles.formNewArt,
-              )}
-              id="formNewArt"
-              action="#"
-            >
-              <div className={styles.formNewArt__block}>
-                <label htmlFor="text">Добавить отзыв</label>
-                <textarea
-                  className={styles.formNewArt__area}
-                  name="text"
-                  id="formArea"
-                  cols="auto"
-                  rows={5}
-                  placeholder="Введите описание"
-                  defaultValue={''}
-                />
-              </div>
-              <button
+            {isAuth && (
+              <form
                 className={classNames(
-                  styles.formNewArt__btnPub,
-                  styles.btnHov02,
+                  styles.modal__formNewArt,
+                  styles.formNewArt,
                 )}
-                id="btnPublish"
+                id="formNewArt"
+                action="#"
               >
-                Опубликовать
-              </button>
-            </form>
+                <div className={styles.formNewArt__block}>
+                  <label htmlFor="text">Добавить отзыв</label>
+                  <textarea
+                    className={styles.formNewArt__area}
+                    name="text"
+                    id="formArea"
+                    cols="auto"
+                    rows={5}
+                    placeholder="Введите описание"
+                    defaultValue={''}
+                  />
+                </div>
+                <button
+                  className={classNames(
+                    styles.formNewArt__btnPub,
+                    styles.btnHov02,
+                  )}
+                  id="btnPublish"
+                >
+                  Опубликовать
+                </button>
+              </form>
+            )}
             <ul
               className={classNames(
                 styles.modal__reviews,

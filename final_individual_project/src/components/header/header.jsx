@@ -1,17 +1,25 @@
-import { React, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { React } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styles from './header.module.scss'
 import classNames from 'classnames'
 import { setCurrentModal } from 'store/slices/modalsSlice'
+import { useAuth } from 'hooks/use-auth'
+import { useNavigate } from 'react-router-dom'
+import { setAuth } from 'store/slices/authSlice'
 
 export const Header = () => {
-  const [isAuth] = useState(true)
+  const { isAuth } = useAuth()
+  const navigate = useNavigate()
+  console.log(isAuth)
   const dispatch = useDispatch()
+  const page = useSelector((state) => {
+    return state.modals.currentPage
+  })
 
   return (
     <header className={styles.header}>
       <nav className={styles.header__nav}>
-        {isAuth && (
+        {isAuth && page === 'myProfile' && (
           <button
             onClick={() => {
               dispatch(setCurrentModal('newArticleModal'))
@@ -27,10 +35,27 @@ export const Header = () => {
           className={classNames(styles.header__btnMainEnter, styles.btnHov01)}
           id="btnMainEnter"
           onClick={() => {
-            dispatch(setCurrentModal('authModal'))
+            if (!isAuth) {
+              dispatch(setCurrentModal('authModal'))
+            }
+            if (isAuth && page !== 'myProfile') {
+              navigate(`/myProfile`, {
+                replace: true,
+              })
+            }
+            if (isAuth && page === 'myProfile') {
+              dispatch(setAuth(null))
+              navigate(`/`, {
+                replace: true,
+              })
+            }
           }}
         >
-          {isAuth ? 'Л' : 'Вход в л'}ичный кабинет
+          {isAuth && page === 'myProfile'
+            ? 'Выйти'
+            : isAuth
+              ? 'Личный кабинет'
+              : 'Войти в личный кабинет'}
         </button>
       </nav>
     </header>

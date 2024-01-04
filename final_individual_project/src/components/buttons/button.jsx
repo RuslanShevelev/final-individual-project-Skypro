@@ -7,6 +7,7 @@ export const MyButton = ({
   action,
   hideable,
   phone,
+  email,
   phoneVisibility,
 }) => {
   return (
@@ -15,26 +16,20 @@ export const MyButton = ({
       className={
         hideable ? classNames(styles.myButton, styles.hide) : styles.myButton
       }
+      type="button"
     >
       {name}
       <br />
-      {/* {phoneVisibility ? 'Скрыть' : 'Показать'}
-                    {'  '}
-                    {data?.user?.phone ? 'телефон' : 'e-mail'} */}
-      {/* {data && ( */}
-      {phone && (
-        <span>
-          {phone
+      <span>
+        {phone &&
+          phone
             .replace(/\D/g, '')
             .replace(
               /(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/g,
               `$1 $2 ${!phoneVisibility ? 'XXX XX XX' : '$3 $4 $5'}`,
             )}
-          {/* // : !phoneVisibility // ? 'XXXXXXXXX' // : data.user.email */}
-        </span>
-      )}
-      {/* ) */}
-      {/* } */}
+        {email && (!phoneVisibility ? 'XXXXXXXXX' : email)}
+      </span>
     </button>
   )
 }

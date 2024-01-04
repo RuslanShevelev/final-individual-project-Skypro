@@ -1,16 +1,21 @@
-import React from 'react'
+import { React, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { setCurrentPage } from 'store/slices/modalsSlice'
 import styles from '../css/main.module.scss'
 import { Card } from 'components/card/card'
 import classNames from 'classnames'
-import { useFetchAllArticlesQuery } from 'services/appService'
 
 export const MainPage = () => {
-  const {
-    data,
-    //  error,
-    //   isLoading
-  } = useFetchAllArticlesQuery()
-  console.log(data)
+  const data = useSelector((state) => {
+    return state.modals.displayArticles
+  })
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setCurrentPage('Main'))
+  }, [])
+
+  // console.log(data)
   return (
     <div className={styles.main__container}>
       <h2 className={styles.main__h2}>Объявления</h2>

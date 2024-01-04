@@ -4,22 +4,23 @@ import classNames from 'classnames'
 import { formatRelative } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { NavLink } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setCurrentArt } from 'store/slices/modalsSlice'
+import noPhoto from '../../img/no-image-large.png'
+// import { useDispatch } from 'react-redux'
+// import { setCurrentArt } from 'store/slices/modalsSlice'
 
 export const Card = ({ id, img, title, price, city, created }) => {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   return (
     <li className={styles.cards__item}>
       <div className={classNames(styles.cards__card, styles.card)}>
         <div className={styles.card__image}>
           <NavLink to={`/article/${id}`}>
             <img
-              src={`http://localhost:8090/${img}`}
+              src={img ? `http://localhost:8090/${img}` : noPhoto}
               alt={title}
-              onClick={() => {
-                return dispatch(setCurrentArt(id))
-              }}
+              // onClick={() => {
+              //   return dispatch(setCurrentArt(id))
+              // }}
             />
           </NavLink>
         </div>
@@ -27,9 +28,9 @@ export const Card = ({ id, img, title, price, city, created }) => {
           <NavLink to={`/article/${id}`}>
             <h3
               className={styles.card__title}
-              onClick={() => {
-                return dispatch(setCurrentArt(id))
-              }}
+              // onClick={() => {
+              //   return dispatch(setCurrentArt(id))
+              // }}
             >
               {title}
             </h3>
