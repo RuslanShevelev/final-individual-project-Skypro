@@ -259,7 +259,7 @@ export const SignIn = () => {
                 // value={email}
                 className={classNames(styles.modal__input, styles.login)}
                 onChange={(e) => {
-                  return inputHandler(e)
+                  inputHandler(e)
                 }}
                 type="text"
                 name="email"
@@ -297,7 +297,7 @@ export const SignIn = () => {
                     )}
                     value={control}
                     onChange={(e) => {
-                      return inputHandler(e)
+                      inputHandler(e)
                     }}
                     type="password"
                     name="control"

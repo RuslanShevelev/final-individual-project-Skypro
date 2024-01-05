@@ -19,12 +19,8 @@ export const Layout = () => {
   useFetchAllArticlesQuery()
   const dispatch = useDispatch()
   // const [page, setPage] = useState('Main')
-  const page = useSelector((state) => {
-    return state.modals.currentPage
-  })
-  const modal = useSelector((state) => {
-    return state.modals.currentModal
-  })
+  const page = useSelector((state) => state.modals.currentPage)
+  const modal = useSelector((state) => state.modals.currentModal)
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
 

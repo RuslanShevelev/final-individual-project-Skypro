@@ -10,11 +10,9 @@ import { setAuth } from 'store/slices/authSlice'
 export const Header = () => {
   const { isAuth } = useAuth()
   const navigate = useNavigate()
-  console.log(isAuth)
+  // console.log(isAuth)
   const dispatch = useDispatch()
-  const page = useSelector((state) => {
-    return state.modals.currentPage
-  })
+  const page = useSelector((state) => state.modals.currentPage)
 
   return (
     <header className={styles.header}>

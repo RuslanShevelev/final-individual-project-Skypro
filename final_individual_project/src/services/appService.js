@@ -17,7 +17,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   // console.log(result)
   if (result?.error?.status === 401 && api.endpoint !== 'getRegistration') {
     const authData = api.getState().auth
-    console.log(authData)
+    // console.log(authData)
     const refreshResult = await baseQuery(
       {
         url: 'auth/login',
@@ -34,11 +34,11 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions,
     )
     if (refreshResult.data) {
-      console.log(refreshResult.data)
+      console.log(refreshResult)
       api.dispatch(
         setTokens({
           access: refreshResult.data.access_token,
-          refresh: authData.refresh_token,
+          refresh: refreshResult.data.refresh_token,
         }),
       )
       result = await baseQuery(args, api, extraOptions)
@@ -52,53 +52,63 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const artApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: baseQueryWithReauth,
-  endpoints: (build) => {
-    return {
-      fetchAllArticles: build.query({
-        query: () => {
-          return {
-            url: `ads`,
-          }
-        },
+  tagTypes: ['credentials'],
+  endpoints: (build) => ({
+    fetchAllArticles: build.query({
+      query: () => ({
+        url: `ads`,
       }),
-      getArticlesByUserId: build.query({
-        query: (id) => {
-          return `ads/?user_id=${id}`
-        },
+    }),
+    getArticlesByUserId: build.query({
+      query: (id) => `ads/?user_id=${id}`,
+    }),
+    getCommentsById: build.query({
+      query: (id) => `ads/${id}/comments`,
+    }),
+    getRegistration: build.mutation({
+      query: (data) => ({
+        url: `auth/register`,
+        method: 'POST',
+        body: data,
       }),
-      getCommentsById: build.query({
-        query: (id) => {
-          return `ads/${id}/comments`
-        },
+    }),
+    loginUser: build.mutation({
+      query: (data) => ({
+        url: `auth/login`,
+        method: 'POST',
+        body: data,
       }),
-      getRegistration: build.mutation({
-        query: (data) => {
-          return {
-            url: `auth/register`,
-            method: 'POST',
-            body: data,
-          }
-        },
+    }),
+    getCredentials: build.query({
+      query: () => ({
+        url: `user`,
+        method: 'GET',
       }),
-      loginUser: build.mutation({
-        query: (data) => {
-          return {
-            url: `auth/login`,
-            method: 'POST',
-            body: data,
-          }
-        },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'credentials', id })),
+              { type: 'credentials', id: 'LIST' },
+            ]
+          : [{ type: 'credentials', id: 'LIST' }],
+    }),
+    uploadAvatar: build.mutation({
+      query: (file) => ({
+        url: `user/avatar`,
+        method: 'POST',
+        body: file,
+        invalidatesTags: [{ type: 'credentials', id: 'LIST' }],
       }),
-      getCredentials: build.query({
-        query: () => {
-          return {
-            url: `user`,
-            method: 'GET',
-          }
-        },
+    }),
+    changeCredentials: build.mutation({
+      query: (data) => ({
+        url: `user`,
+        method: 'PATCH',
+        body: data,
+        invalidatesTags: [{ type: 'credentials', id: 'LIST' }],
       }),
-    }
-  },
+    }),
+  }),
 })
 
 export const {
@@ -108,4 +118,6 @@ export const {
   useGetRegistrationMutation,
   useLoginUserMutation,
   useGetCredentialsQuery,
+  useUploadAvatarMutation,
+  useChangeCredentialsMutation,
 } = artApi

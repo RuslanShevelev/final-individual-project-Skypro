@@ -6,36 +6,55 @@ import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import Skeleton from 'react-loading-skeleton'
 import { setCurrentPage, setCurrentModal } from 'store/slices/modalsSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card } from 'components/card/card'
 import { MyButton } from 'components/buttons/button'
 import {
   useGetArticlesByUserIdQuery,
   useGetCredentialsQuery,
+  useChangeCredentialsMutation,
 } from 'services/appService'
 
 export const Profile = ({ auth }) => {
   const params = useParams()
   const dispatch = useDispatch()
   const [myProfile] = useState(auth)
-  const { data: credentials } = useGetCredentialsQuery()
+  const credentials = useSelector((state) => state.auth)
+  useGetCredentialsQuery()
   console.log(credentials)
   const { data, isLoading } = useGetArticlesByUserIdQuery(
     myProfile && credentials ? credentials?.id : Number(params.id),
   )
+  const [credChanges, setCredChanges] = useState({})
+  const [changeCredentials, newCredetials] = useChangeCredentialsMutation()
+
   const [phoneVisibility, setPhoneVisibility] = useState(false)
-  console.log(data)
+  console.log(newCredetials)
   useEffect(() => {
     dispatch(setCurrentPage(myProfile ? 'myProfile' : 'Profile'))
   }, [])
 
-  // useEffect(() => {
-  //   if (Number(params.id) === 2) {
-  //     setMyProfile(true)
-  //   }
-  // }, [params])
+  const inputHandler = (e) => {
+    switch (e.target.name) {
+      case 'name':
+        setCredChanges({ ...credChanges, name: e.target.value })
+        break
+      case 'last-name':
+        setCredChanges({ ...credChanges, surname: e.target.value })
+        break
+      case 'city':
+        setCredChanges({ ...credChanges, city: e.target.value })
+        break
+      case 'phone':
+        setCredChanges({ ...credChanges, phone: e.target.value })
+        break
+      default:
+        break
+    }
+  }
+
   const user = data ? data[0]?.user : null
-  console.log(myProfile)
+  // console.log(myProfile)
 
   return (
     <div className={styles.main__container}>
@@ -89,28 +108,33 @@ export const Profile = ({ auth }) => {
                       <input
                         className={styles.settings__fName}
                         // id="settings-fname"
-                        name="fname"
+                        name="name"
                         type="text"
+                        onChange={(e) => {
+                          inputHandler(e)
+                        }}
                         defaultValue={credentials?.name}
-                        placeholder=""
                       />
                     </div>
                     <div className={styles.settings__div}>
                       <label htmlFor="lname">Фамилия</label>
                       <input
                         className={styles.settings__lName}
-                        // id="settings-lname"
-                        name="lname"
+                        name="last-name"
+                        onChange={(e) => {
+                          inputHandler(e)
+                        }}
                         type="text"
                         defaultValue={credentials?.surname}
-                        placeholder=""
                       />
                     </div>
                     <div className={styles.settings__div}>
                       <label htmlFor="city">Город</label>
                       <input
                         className={styles.settings__city}
-                        // id="settings-city"
+                        onChange={(e) => {
+                          inputHandler(e)
+                        }}
                         name="city"
                         type="text"
                         defaultValue={credentials?.city}
@@ -123,13 +147,19 @@ export const Profile = ({ auth }) => {
                         className={styles.settings__phone}
                         id="settings-phone"
                         name="phone"
+                        onChange={(e) => {
+                          inputHandler(e)
+                        }}
                         type="tel"
                         defaultValue={credentials?.phone}
                         placeholder={'Введите номер телефона'}
                       />
                     </div>
                     <div className={styles.settings__btn}>
-                      <MyButton name="Сохранить" />
+                      <MyButton
+                        name="Сохранить"
+                        action={() => changeCredentials(credChanges)}
+                      />
                     </div>
                   </form>
                 </div>
@@ -183,19 +213,17 @@ export const Profile = ({ auth }) => {
       <div className={styles.main__content}>
         {data?.length > 0 && (
           <ul className={classNames(styles.content__cards, styles.cards)}>
-            {data.map((art) => {
-              return (
-                <Card
-                  key={art.id}
-                  id={art.id}
-                  title={art.title}
-                  created={art.created_on}
-                  price={art.price}
-                  city={art.user.city}
-                  img={art?.images[0]?.url}
-                />
-              )
-            })}
+            {data.map((art) => (
+              <Card
+                key={art.id}
+                id={art.id}
+                title={art.title}
+                created={art.created_on}
+                price={art.price}
+                city={art.user.city}
+                img={art?.images[0]?.url}
+              />
+            ))}
           </ul>
         )}
       </div>
