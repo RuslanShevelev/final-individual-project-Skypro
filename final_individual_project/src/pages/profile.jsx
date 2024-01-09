@@ -6,8 +6,9 @@ import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import Skeleton from 'react-loading-skeleton'
 import { setCurrentPage, setCurrentModal } from 'store/slices/modalsSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Card } from 'components/card/card'
+import { Loader } from 'components/loader/loader'
 import { MyButton } from 'components/buttons/button'
 import {
   useGetArticlesByUserIdQuery,
@@ -15,24 +16,23 @@ import {
   useChangeCredentialsMutation,
 } from 'services/appService'
 
-export const Profile = ({ auth }) => {
-  const params = useParams()
+export const Profile = ({ myProfile }) => {
   const dispatch = useDispatch()
-  const [myProfile] = useState(auth)
-  const credentials = useSelector((state) => state.auth)
-  useGetCredentialsQuery()
-  console.log(credentials)
-  const { data, isLoading } = useGetArticlesByUserIdQuery(
-    myProfile && credentials ? credentials?.id : Number(params.id),
-  )
+  const params = myProfile ? null : useParams()
   const [credChanges, setCredChanges] = useState({})
-  const [changeCredentials, newCredetials] = useChangeCredentialsMutation()
-
   const [phoneVisibility, setPhoneVisibility] = useState(false)
-  console.log(newCredetials)
+  const { data: credentials } = myProfile
+    ? useGetCredentialsQuery()
+    : { data: null }
+  const { data, isLoading } = useGetArticlesByUserIdQuery(
+    myProfile ? credentials?.id : Number(params?.id),
+  )
+  const user = data ? data[0]?.user : null
+  const [changeCredentials, newCred] = useChangeCredentialsMutation()
   useEffect(() => {
     dispatch(setCurrentPage(myProfile ? 'myProfile' : 'Profile'))
   }, [])
+  console.log(newCred)
 
   const inputHandler = (e) => {
     switch (e.target.name) {
@@ -52,9 +52,6 @@ export const Profile = ({ auth }) => {
         break
     }
   }
-
-  const user = data ? data[0]?.user : null
-  // console.log(myProfile)
 
   return (
     <div className={styles.main__container}>
@@ -115,6 +112,7 @@ export const Profile = ({ auth }) => {
                         }}
                         defaultValue={credentials?.name}
                       />
+                      {newCred.isLoading && <Loader />}
                     </div>
                     <div className={styles.settings__div}>
                       <label htmlFor="lname">Фамилия</label>
@@ -158,7 +156,10 @@ export const Profile = ({ auth }) => {
                     <div className={styles.settings__btn}>
                       <MyButton
                         name="Сохранить"
-                        action={() => changeCredentials(credChanges)}
+                        action={() => {
+                          changeCredentials(credChanges)
+                          setCredChanges({})
+                        }}
                       />
                     </div>
                   </form>

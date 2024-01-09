@@ -52,7 +52,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const artApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['credentials'],
+  tagTypes: ['Cred'],
   endpoints: (build) => ({
     fetchAllArticles: build.query({
       query: () => ({
@@ -84,29 +84,23 @@ export const artApi = createApi({
         url: `user`,
         method: 'GET',
       }),
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: 'credentials', id })),
-              { type: 'credentials', id: 'LIST' },
-            ]
-          : [{ type: 'credentials', id: 'LIST' }],
+      providesTags: (result, error, id) => [{ type: 'Cred', id }],
     }),
     uploadAvatar: build.mutation({
       query: (file) => ({
         url: `user/avatar`,
         method: 'POST',
         body: file,
-        invalidatesTags: [{ type: 'credentials', id: 'LIST' }],
       }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Cred', id }],
     }),
     changeCredentials: build.mutation({
       query: (data) => ({
         url: `user`,
         method: 'PATCH',
         body: data,
-        invalidatesTags: [{ type: 'credentials', id: 'LIST' }],
       }),
+      invalidatesTags: ['Cred'],
     }),
   }),
 })
