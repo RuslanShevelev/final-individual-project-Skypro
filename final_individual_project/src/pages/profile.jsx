@@ -8,7 +8,6 @@ import Skeleton from 'react-loading-skeleton'
 import { setCurrentPage, setCurrentModal } from 'store/slices/modalsSlice'
 import { useDispatch } from 'react-redux'
 import { Card } from 'components/card/card'
-import { Loader } from 'components/loader/loader'
 import { MyButton } from 'components/buttons/button'
 import {
   useGetArticlesByUserIdQuery,
@@ -30,9 +29,15 @@ export const Profile = ({ myProfile }) => {
   const user = data ? data[0]?.user : null
   const [changeCredentials, newCred] = useChangeCredentialsMutation()
   useEffect(() => {
+    if (newCred.isSuccess) {
+      setCredChanges({})
+    }
+  }, [newCred])
+
+  useEffect(() => {
     dispatch(setCurrentPage(myProfile ? 'myProfile' : 'Profile'))
   }, [])
-  console.log(newCred)
+  // console.log(newCred)
 
   const inputHandler = (e) => {
     switch (e.target.name) {
@@ -112,7 +117,11 @@ export const Profile = ({ myProfile }) => {
                         }}
                         defaultValue={credentials?.name}
                       />
-                      {newCred.isLoading && <Loader />}
+                      {'name' in credChanges && newCred.isLoading && (
+                        <div className={styles.settings__loader}>
+                          <Skeleton height={40} />
+                        </div>
+                      )}
                     </div>
                     <div className={styles.settings__div}>
                       <label htmlFor="lname">Фамилия</label>
@@ -125,6 +134,11 @@ export const Profile = ({ myProfile }) => {
                         type="text"
                         defaultValue={credentials?.surname}
                       />
+                      {'surname' in credChanges && newCred.isLoading && (
+                        <div className={styles.settings__loader}>
+                          <Skeleton height={40} />
+                        </div>
+                      )}
                     </div>
                     <div className={styles.settings__div}>
                       <label htmlFor="city">Город</label>
@@ -138,6 +152,11 @@ export const Profile = ({ myProfile }) => {
                         defaultValue={credentials?.city}
                         placeholder=""
                       />
+                      {'city' in credChanges && newCred.isLoading && (
+                        <div className={styles.settings__loader}>
+                          <Skeleton height={40} />
+                        </div>
+                      )}
                     </div>
                     <div className={styles.settings__div}>
                       <label htmlFor="phone">Телефон</label>
@@ -152,14 +171,22 @@ export const Profile = ({ myProfile }) => {
                         defaultValue={credentials?.phone}
                         placeholder={'Введите номер телефона'}
                       />
+                      {'phone' in credChanges && newCred.isLoading && (
+                        <div className={styles.settings__loader}>
+                          <Skeleton height={40} />
+                        </div>
+                      )}
                     </div>
                     <div className={styles.settings__btn}>
                       <MyButton
                         name="Сохранить"
                         action={() => {
                           changeCredentials(credChanges)
-                          setCredChanges({})
                         }}
+                        disable={
+                          Object.keys(credChanges).length === 0 ||
+                          newCred.isLoading
+                        }
                       />
                     </div>
                   </form>

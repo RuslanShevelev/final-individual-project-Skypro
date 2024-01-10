@@ -17,39 +17,40 @@ const initialState = {
   isAuth: tokens?.isAuth ?? false,
   access: tokens?.access ?? '',
   refresh: tokens?.refresh ?? '',
-  id: '',
-  name: '',
-  email: '',
-  city: '',
-  avatar: '',
-  sells_from: '',
-  phone: '',
-  role: '',
-  surname: '',
+  // id: '',
+  // name: '',
+  // email: '',
+  // city: '',
+  // avatar: '',
+  // sells_from: '',
+  // phone: '',
+  // role: '',
+  // surname: '',
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAuth(state, action) {
-      const payload = action.payload ?? initialState
-      state.isAuth = payload.isAuth
-      state.access = payload.access
-      state.refresh = payload.refresh
-      if (action.payload) {
-        localStorage.setItem(
-          AUTH_KEY,
-          JSON.stringify({
-            isAuth: state.isAuth,
-            access: state.access,
-            refresh: state.refresh,
-          }),
-        )
-      } else {
-        localStorage.removeItem(AUTH_KEY)
-      }
-    },
+    // setAuth(state, action) {
+    //   const payload = action.payload ?? initialState
+    //   state.isAuth = payload.isAuth
+    //   state.access = payload.access
+    //   state.refresh = payload.refresh
+    //   if (action.payload) {
+    //     localStorage.setItem(
+    //       AUTH_KEY,
+    //       JSON.stringify({
+    //         isAuth: state.isAuth,
+    //         access: state.access,
+    //         refresh: state.refresh,
+    //       }),
+    //     )
+    //   } else {
+    //     localStorage.removeItem(AUTH_KEY)
+    //     state = initialState
+    //   }
+    // },
     setTokens(state, action) {
       const payload = action.payload ?? initialState
       state.access = payload.access
@@ -63,10 +64,12 @@ const authSlice = createSlice({
         }),
       )
     },
-    // logout(state, action) {
-    //   state = initialState
-    //   localStorage.removeItem(AUTH_KEY)
-    // },
+    logout(state) {
+      state.isAuth = false
+      state.access = ''
+      state.refresh = ''
+      localStorage.removeItem(AUTH_KEY)
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -85,20 +88,20 @@ const authSlice = createSlice({
         )
       },
     )
-    builder.addMatcher(
-      artApi.endpoints.getCredentials.matchFulfilled,
-      (state, { payload }) => {
-        state.id = payload.id
-        state.name = payload.name
-        state.email = payload.email
-        state.city = payload.city
-        state.avatar = payload.avatar
-        state.sells_from = payload.sells_from
-        state.phone = payload.phone
-        state.role = payload.role
-        state.surname = payload.surname
-      },
-    )
+    // builder.addMatcher(
+    //   artApi.endpoints.getCredentials.matchFulfilled,
+    //   (state, { payload }) => {
+    //     state.id = payload.id
+    //     state.name = payload.name
+    //     state.email = payload.email
+    //     state.city = payload.city
+    //     state.avatar = payload.avatar
+    //     state.sells_from = payload.sells_from
+    //     state.phone = payload.phone
+    //     state.role = payload.role
+    //     state.surname = payload.surname
+    //   },
+    // )
     // builder.addMatcher(
     //   artApi.endpoints.changeCredentials.matchFulfilled,
     //   (state, { payload }) => {
@@ -116,5 +119,5 @@ const authSlice = createSlice({
     // )
   },
 })
-export const { setAuth, setTokens } = authSlice.actions
+export const { logout, setTokens } = authSlice.actions
 export const authReducer = authSlice.reducer

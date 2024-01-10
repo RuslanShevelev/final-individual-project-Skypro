@@ -6,11 +6,13 @@ export const MyButton = ({
   name,
   action,
   hideable,
+  disable,
   phone,
   email,
   phoneVisibility,
 }) => (
   <button
+    disabled={disable}
     onClick={action}
     className={
       hideable ? classNames(styles.myButton, styles.hide) : styles.myButton

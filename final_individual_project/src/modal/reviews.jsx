@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../css/reviews.module.scss'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { CloseButton } from 'components/buttons/closebutton'
 import { Comment } from 'components/comment/comment'
 import { useAuth } from 'hooks/use-auth'
+import { usePostCommentMutation } from 'services/appService'
 
 export const Reviews = ({ close }) => {
-  const data = useSelector((state) => {
-    return state.modals.comments
-  })
+  const data = useSelector((state) => state.modals.comments)
+  const artId = useSelector((state) => Number(state.modals.currentArt.id))
   const { isAuth } = useAuth()
-  // console.log(data)
+  const [postComment, newData] = usePostCommentMutation()
+  const [newComment, setNewComment] = useState('')
+  console.log(newData)
   return (
     <div className={styles.containerBg}>
       <div className={styles.modal__block}>
@@ -40,6 +42,9 @@ export const Reviews = ({ close }) => {
                     rows={5}
                     placeholder="Введите описание"
                     defaultValue={''}
+                    onChange={(e) => {
+                      setNewComment(e.target.value)
+                    }}
                   />
                 </div>
                 <button
@@ -47,7 +52,10 @@ export const Reviews = ({ close }) => {
                     styles.formNewArt__btnPub,
                     styles.btnHov02,
                   )}
-                  id="btnPublish"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    postComment(artId, newComment)
+                  }}
                 >
                   Опубликовать
                 </button>
@@ -60,18 +68,16 @@ export const Reviews = ({ close }) => {
               )}
             >
               {data &&
-                data?.map((item) => {
-                  return (
-                    <li key={item.id}>
-                      <Comment
-                        name={item?.author?.name}
-                        date={item?.created_on}
-                        comment={item?.text}
-                        img={item?.author?.avatar}
-                      />
-                    </li>
-                  )
-                })}
+                data?.map((item) => (
+                  <li key={item.id}>
+                    <Comment
+                      name={item?.author?.name}
+                      date={item?.created_on}
+                      comment={item?.text}
+                      img={item?.author?.avatar}
+                    />
+                  </li>
+                ))}
             </ul>
           </div>
         </div>

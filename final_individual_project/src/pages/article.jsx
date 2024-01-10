@@ -24,9 +24,7 @@ export const Article = ({ myArticle }) => {
   const comments = useGetCommentsByIdQuery(Number(params.id)).data
   const [phoneVisibility, setPhoneVisibility] = useState(false)
   const [activeImg, setActiveImg] = useState(null)
-  const { currentArt: data, loading } = useSelector((state) => {
-    return state.modals
-  })
+  const { currentArt: data, loading } = useSelector((state) => state.modals)
   useEffect(() => {
     if (!loading) {
       dispatch(setCurrentPage('Article'))
@@ -90,41 +88,32 @@ export const Article = ({ myArticle }) => {
               </div>
               <ul className={styles.article__imgBar}>
                 {data
-                  ? data?.images?.map((item) => {
-                      return (
-                        <li
-                          key={item.id}
-                          className={
-                            item.url === activeImg?.url
-                              ? classNames(
-                                  styles.article__imgBarDiv,
-                                  styles.article__imgBarDiv_active,
-                                )
-                              : styles.article__imgBarDiv
-                          }
-                          onClick={() => {
-                            return setActiveImg(item)
-                          }}
-                        >
-                          <img
-                            src={`http://localhost:8090/${item.url}`}
-                            alt=""
-                          />
-                        </li>
-                      )
-                    })
+                  ? data?.images?.map((item) => (
+                      <li
+                        key={item.id}
+                        className={
+                          item.url === activeImg?.url
+                            ? classNames(
+                                styles.article__imgBarDiv,
+                                styles.article__imgBarDiv_active,
+                              )
+                            : styles.article__imgBarDiv
+                        }
+                        onClick={() => setActiveImg(item)}
+                      >
+                        <img src={`http://localhost:8090/${item.url}`} alt="" />
+                      </li>
+                    ))
                   : Array(5)
                       .fill()
-                      .map(() => {
-                        return (
-                          <li
-                            key={Math.random()}
-                            className={styles.article__imgBarDiv}
-                          >
-                            <Skeleton width={88} height={88} />
-                          </li>
-                        )
-                      })}
+                      .map(() => (
+                        <li
+                          key={Math.random()}
+                          className={styles.article__imgBarDiv}
+                        >
+                          <Skeleton width={88} height={88} />
+                        </li>
+                      ))}
               </ul>
               <div
                 className={classNames(

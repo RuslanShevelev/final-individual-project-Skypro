@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import { setCurrentModal } from 'store/slices/modalsSlice'
 import { useAuth } from 'hooks/use-auth'
 import { useNavigate } from 'react-router-dom'
-import { setAuth } from 'store/slices/authSlice'
+import { logout } from 'store/slices/authSlice'
 
 export const Header = () => {
   const { isAuth } = useAuth()
@@ -42,7 +42,7 @@ export const Header = () => {
               })
             }
             if (isAuth && page === 'myProfile') {
-              dispatch(setAuth(null))
+              dispatch(logout())
               navigate(`/`, {
                 replace: true,
               })

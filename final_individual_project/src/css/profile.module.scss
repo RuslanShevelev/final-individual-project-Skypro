@@ -88,6 +88,16 @@
   }
   &__div {
     display: inline-block;
+    position: relative;
+  }
+  &__loader {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    // box-sizing: border-box;
+    border-radius: 6px;
+    bottom: 6px;
+    padding: 0 5px;
   }
   &__btn {
     display: inline-block;
@@ -305,6 +315,14 @@
     &__div {
       display: inline-block;
       margin: 0 0px 18px;
+    }
+    &__loader {
+      width: 98%;
+      border-radius: 30px;
+      bottom: 2px;
+      overflow: hidden;
+      margin-left: 3px;
+padding: 0;
     }
     &__form {
       width: 100%;

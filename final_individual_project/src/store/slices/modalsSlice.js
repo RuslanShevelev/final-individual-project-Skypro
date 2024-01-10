@@ -23,24 +23,24 @@ export const modalSlice = createSlice({
       state.currentModal = action.payload
     },
     setCurrentArt: (state, action) => {
-      state.currentArt = state?.allArticles?.find((art) => {
-        return art.id === action.payload
-      })
+      state.currentArt = state?.allArticles?.find(
+        (art) => art.id === action.payload,
+      )
     },
     getUserArts: (state, action) => {
-      state.userArticles = state.allArticles.filter((art) => {
-        return art?.user?.id === action.payload
-      })
+      state.userArticles = state.allArticles.filter(
+        (art) => art?.user?.id === action.payload,
+      )
     },
     findArticles: (state, action) => {
       state.displayArticles =
         action.payload === 'clear'
           ? state.allArticles
-          : state.allArticles.filter((art) => {
-              return art.title
+          : state.allArticles.filter((art) =>
+              art.title
                 .toLocaleLowerCase()
-                .includes(action.payload.toLocaleLowerCase())
-            })
+                .includes(action.payload.toLocaleLowerCase()),
+            )
     },
     setComments: (state, { payload }) => {
       state.comments = payload

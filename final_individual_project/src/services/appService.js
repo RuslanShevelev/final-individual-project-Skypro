@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setAuth, setTokens } from '../store/slices/authSlice'
+import { logout, setTokens } from '../store/slices/authSlice'
 
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8090/',
@@ -43,7 +43,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       )
       result = await baseQuery(args, api, extraOptions)
     } else {
-      api.dispatch(setAuth(null))
+      api.dispatch(logout())
     }
   }
   return result
@@ -52,7 +52,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const artApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Cred'],
+  tagTypes: ['Cred', 'Comments'],
   endpoints: (build) => ({
     fetchAllArticles: build.query({
       query: () => ({
@@ -64,6 +64,24 @@ export const artApi = createApi({
     }),
     getCommentsById: build.query({
       query: (id) => `ads/${id}/comments`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Comments', id })),
+              { type: 'Comments', id: 'LIST' },
+            ]
+          : [{ type: 'Comments', id: 'LIST' }],
+    }),
+    postComment: build.mutation({
+      query: (id, data) => ({
+        url: `ads/${id}/comments`,
+        method: 'POST',
+        body: JSON.stringify({ text: data }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
+      invalidatesTags: [{ type: 'Comments', id: 'LIST' }],
     }),
     getRegistration: build.mutation({
       query: (data) => ({
@@ -109,6 +127,7 @@ export const {
   useFetchAllArticlesQuery,
   useGetArticlesByUserIdQuery,
   useGetCommentsByIdQuery,
+  usePostCommentMutation,
   useGetRegistrationMutation,
   useLoginUserMutation,
   useGetCredentialsQuery,
