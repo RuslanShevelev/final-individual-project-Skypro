@@ -12,7 +12,7 @@ export const Reviews = ({ close }) => {
   const artId = useSelector((state) => Number(state.modals.currentArt.id))
   const { isAuth } = useAuth()
   const [postComment, newData] = usePostCommentMutation()
-  const [newComment, setNewComment] = useState('')
+  const [newComment, setNewComment] = useState({ id: artId })
   console.log(newData)
   return (
     <div className={styles.containerBg}>
@@ -43,7 +43,10 @@ export const Reviews = ({ close }) => {
                     placeholder="Введите описание"
                     defaultValue={''}
                     onChange={(e) => {
-                      setNewComment(e.target.value)
+                      setNewComment({
+                        ...newComment,
+                        body: { text: e.target.value },
+                      })
                     }}
                   />
                 </div>
@@ -54,7 +57,7 @@ export const Reviews = ({ close }) => {
                   )}
                   onClick={(e) => {
                     e.preventDefault()
-                    postComment(artId, newComment)
+                    postComment(newComment)
                   }}
                 >
                   Опубликовать

@@ -73,13 +73,13 @@ export const artApi = createApi({
           : [{ type: 'Comments', id: 'LIST' }],
     }),
     postComment: build.mutation({
-      query: (id, data) => ({
-        url: `ads/${id}/comments`,
+      query: (data) => ({
+        url: `ads/${data.id}/comments`,
         method: 'POST',
-        body: JSON.stringify({ text: data }),
-        headers: {
-          'content-type': 'application/json',
-        },
+        body: data.body,
+        // headers: {
+        //   'content-type': 'application/json',
+        // },
       }),
       invalidatesTags: [{ type: 'Comments', id: 'LIST' }],
     }),

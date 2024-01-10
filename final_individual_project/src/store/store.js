@@ -12,7 +12,6 @@ export const store = configureStore({
     auth: authReducer,
     [artApi.reducerPath]: artApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(artApi.middleware)
-  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(artApi.middleware),
 })
