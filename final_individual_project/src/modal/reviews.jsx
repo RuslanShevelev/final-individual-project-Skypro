@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from '../css/reviews.module.scss'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
@@ -13,7 +13,23 @@ export const Reviews = ({ close }) => {
   const { isAuth } = useAuth()
   const [postComment, newData] = usePostCommentMutation()
   const [newComment, setNewComment] = useState({ id: artId })
-  console.log(newData)
+  console.log(newComment)
+  useEffect(() => {
+    if (newData.isSuccess) {
+      setNewComment({
+        ...newComment,
+        body: { text: '' },
+      })
+    }
+    if (newData.isError) {
+      setNewComment({
+        ...newComment,
+        error: 'Что-то пошло не так. Попробуйте позже.',
+      })
+      console.error(newData?.error?.data?.detail[0]?.msg)
+    }
+  }, [newData])
+
   return (
     <div className={styles.containerBg}>
       <div className={styles.modal__block}>
@@ -42,6 +58,7 @@ export const Reviews = ({ close }) => {
                     rows={5}
                     placeholder="Введите описание"
                     defaultValue={''}
+                    value={newComment?.body?.text}
                     onChange={(e) => {
                       setNewComment({
                         ...newComment,
@@ -51,16 +68,18 @@ export const Reviews = ({ close }) => {
                   />
                 </div>
                 <button
-                  className={classNames(
-                    styles.formNewArt__btnPub,
-                    styles.btnHov02,
-                  )}
+                  className={styles.formNewArt__btnPub}
                   onClick={(e) => {
                     e.preventDefault()
                     postComment(newComment)
                   }}
+                  disabled={
+                    newComment?.body?.text === '' ||
+                    !newComment?.body ||
+                    newData?.isLoading
+                  }
                 >
-                  Опубликовать
+                  {newData?.isLoading ? 'Отправка...' : 'Опубликовать'}
                 </button>
               </form>
             )}

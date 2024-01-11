@@ -34,7 +34,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions,
     )
     if (refreshResult.data) {
-      console.log(refreshResult)
+      // console.log(refreshResult)
       api.dispatch(
         setTokens({
           access: refreshResult.data.access_token,
@@ -52,12 +52,30 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const artApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Cred', 'Comments'],
+  tagTypes: ['Cred', 'Comments', 'Articles'],
   endpoints: (build) => ({
     fetchAllArticles: build.query({
       query: () => ({
         url: `ads`,
       }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Articles', id })),
+              { type: 'Articles', id: 'LIST' },
+            ]
+          : [{ type: 'Articles', id: 'LIST' }],
+    }),
+    postArticle: build.mutation({
+      query: (data) => ({
+        url: `ads/?title=${data.title}&&description=${data.description}&&price=${data.price}`,
+        method: 'POST',
+        body: data.images,
+        // headers: {
+        //   'Content-type': 'multipart/form-data',
+        // },
+      }),
+      invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
     }),
     getArticlesByUserId: build.query({
       query: (id) => `ads/?user_id=${id}`,
@@ -125,6 +143,7 @@ export const artApi = createApi({
 
 export const {
   useFetchAllArticlesQuery,
+  usePostArticleMutation,
   useGetArticlesByUserIdQuery,
   useGetCommentsByIdQuery,
   usePostCommentMutation,
