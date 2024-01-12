@@ -28,10 +28,14 @@ export const AddOrChangeArticle = () => {
   }
   useEffect(() => {
     if (imageFiles.length) {
+      console.log(imageFiles)
       const formData = new FormData()
-      for (let i = 0; i < imageFiles.length; i++) {
-        formData.append(`image_${i}`, imageFiles[i])
-      }
+      imageFiles.forEach((image, i) => {
+        formData.append(`image_${i}`, image)
+      })
+      // for (let i = 0; i < imageFiles.length; i++) {
+      //   )
+      // }
       setArticleData({ ...articleData, images: formData })
     }
     return () => {

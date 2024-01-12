@@ -68,7 +68,12 @@ export const artApi = createApi({
     }),
     postArticle: build.mutation({
       query: (data) => ({
-        url: `ads/?title=${data.title}&&description=${data.description}&&price=${data.price}`,
+        // const formData = new FormData()
+        // for (let i = 0; i < data?.images?.length; i++) {
+        //   formData.append('images', data?.images[i], `image_${i}`)
+        // }
+        // return {
+        url: `ads/?title=${data?.title}&&description=${data?.description}&&price=${data?.price}`,
         method: 'POST',
         body: data.images,
         // headers: {
