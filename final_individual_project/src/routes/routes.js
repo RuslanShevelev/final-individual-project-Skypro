@@ -17,7 +17,6 @@ export const AppRoutes = () => {
         { path: '/', element: <MainPage /> },
         { path: '/profile/:id', element: <Profile /> },
         { path: '/article/:id', element: <Article /> },
-        { path: '/myArticle', element: <Article myArticle /> },
       ],
     },
     {

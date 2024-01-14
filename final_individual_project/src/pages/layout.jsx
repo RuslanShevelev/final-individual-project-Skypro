@@ -69,6 +69,7 @@ export const Layout = () => {
           <div className={styles.modalBg}>
             {modal === 'authModal' && <SignIn />}
             {modal === 'newArticleModal' && <AddOrChangeArticle />}
+            {modal === 'changeArtModal' && <AddOrChangeArticle change />}
             {modal === 'reviewsModal' && <Reviews />}
             {modal === 'uploadImage' && <UploadImage />}
           </div>

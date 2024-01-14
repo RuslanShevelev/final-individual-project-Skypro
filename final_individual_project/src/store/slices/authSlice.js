@@ -17,7 +17,7 @@ const initialState = {
   isAuth: tokens?.isAuth ?? false,
   access: tokens?.access ?? '',
   refresh: tokens?.refresh ?? '',
-  // id: '',
+  id: tokens?.id ?? null,
   // name: '',
   // email: '',
   // city: '',
@@ -55,19 +55,13 @@ const authSlice = createSlice({
       const payload = action.payload ?? initialState
       state.access = payload.access
       state.refresh = payload.refresh
-      localStorage.setItem(
-        AUTH_KEY,
-        JSON.stringify({
-          isAuth: state.isAuth,
-          access: state.access,
-          refresh: state.refresh,
-        }),
-      )
+      localStorage.setItem(AUTH_KEY, JSON.stringify(state))
     },
     logout(state) {
       state.isAuth = false
       state.access = ''
       state.refresh = ''
+      state.id = null
       localStorage.removeItem(AUTH_KEY)
     },
   },
@@ -78,30 +72,16 @@ const authSlice = createSlice({
         state.isAuth = true
         state.access = payload.access_token
         state.refresh = payload.refresh_token
-        localStorage.setItem(
-          AUTH_KEY,
-          JSON.stringify({
-            isAuth: state.isAuth,
-            access: state.access,
-            refresh: state.refresh,
-          }),
-        )
+        localStorage.setItem(AUTH_KEY, JSON.stringify(state))
       },
     )
-    // builder.addMatcher(
-    //   artApi.endpoints.getCredentials.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.id = payload.id
-    //     state.name = payload.name
-    //     state.email = payload.email
-    //     state.city = payload.city
-    //     state.avatar = payload.avatar
-    //     state.sells_from = payload.sells_from
-    //     state.phone = payload.phone
-    //     state.role = payload.role
-    //     state.surname = payload.surname
-    //   },
-    // )
+    builder.addMatcher(
+      artApi.endpoints.getCredentials.matchFulfilled,
+      (state, { payload }) => {
+        state.id = payload.id
+        localStorage.setItem(AUTH_KEY, JSON.stringify(state))
+      },
+    )
     // builder.addMatcher(
     //   artApi.endpoints.changeCredentials.matchFulfilled,
     //   (state, { payload }) => {

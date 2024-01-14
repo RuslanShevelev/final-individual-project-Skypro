@@ -14,6 +14,7 @@ export const UploadImage = () => {
   const [uploadAvatar, data] = useUploadAvatarMutation()
   const dispatch = useDispatch()
   console.log(data)
+
   const sendAvatar = () => {
     const avatar = new FormData()
     avatar.append('file', file)

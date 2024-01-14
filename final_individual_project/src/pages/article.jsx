@@ -7,6 +7,7 @@ import {
   setCurrentArt,
   setComments,
 } from 'store/slices/modalsSlice'
+import { commentsNumber } from 'helpers/commentsNumber'
 import styles from '../css/article.module.scss'
 import classNames from 'classnames'
 import Skeleton from 'react-loading-skeleton'
@@ -14,58 +15,54 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { formatRelative, format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { MyButton } from 'components/buttons/button'
-import { useGetCommentsByIdQuery } from 'services/appService'
+import {
+  useGetCommentsByIdQuery,
+  useDeleteArticleMutation,
+} from 'services/appService'
 import noPhoto from '../img/no-image-large.png'
+import { useAuth } from 'hooks/use-auth'
 
-export const Article = ({ myArticle }) => {
+export const Article = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { id: myId } = useAuth()
+  const [myArticle, setMyArticle] = useState(false)
   const params = useParams()
   const comments = useGetCommentsByIdQuery(Number(params.id)).data
   const [phoneVisibility, setPhoneVisibility] = useState(false)
   const [activeImg, setActiveImg] = useState(null)
   const { currentArt: data, loading } = useSelector((state) => state.modals)
+  const [deleteArticle, deleteing] = useDeleteArticleMutation()
+
   useEffect(() => {
     if (!loading) {
       dispatch(setCurrentPage('Article'))
     }
+    if (deleteing.isSuccess) {
+      navigate(`/myProfile`, {
+        replace: true,
+      })
+    }
     dispatch(setCurrentArt(Number(params.id)))
-  }, [loading])
+  }, [loading, deleteing])
 
   useEffect(() => {
     if (data?.images[0]) {
       setActiveImg(data.images[0])
     }
+    if (data?.user?.id === myId) {
+      setMyArticle(true)
+    }
     return () => {
       setActiveImg(null)
+      setMyArticle(false)
     }
-  }, [data])
+  }, [data, myId])
 
   useEffect(() => {
     dispatch(setComments(comments))
   }, [comments])
 
-  const commentsNumber = (num) => {
-    const string = num?.toString()
-    const lastChar = string?.charAt(string.length - 1)
-    let result
-    if (num === 0) {
-      result = 'Отзывов пока нет'
-    } else if (lastChar === '1' && !(num === 11)) {
-      result = num + ' отзыв'
-    } else if (lastChar === '2' && !(num === 12)) {
-      result = num + ' отзыва'
-    } else if (lastChar === '3' && !(num === 13)) {
-      result = num + ' отзыва'
-    } else if (lastChar === '4' && !(num === 14)) {
-      result = num + ' отзыва'
-    } else {
-      result = num + ' отзывов'
-    }
-    return result
-  }
-
-  // console.log(commentsNumber)
   return (
     <>
       <div className={classNames(styles.main__artic, styles.artic)}>
@@ -204,8 +201,17 @@ export const Article = ({ myArticle }) => {
                   </button>
                 ) : (
                   <>
-                    <MyButton name={'Редактировать'} />
-                    <MyButton name={'Снять с публикации'} />
+                    <MyButton
+                      name={'Редактировать'}
+                      action={() => dispatch(setCurrentModal('changeArtModal'))}
+                    />
+                    <MyButton
+                      name={'Снять с публикации'}
+                      action={() => {
+                        deleteArticle(data?.id)
+                      }}
+                      disable={deleteing?.isLoading}
+                    />
                   </>
                 )}
               </div>

@@ -53,6 +53,7 @@ export const artApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: baseQueryWithReauth,
   tagTypes: ['Cred', 'Comments', 'Articles'],
+
   endpoints: (build) => ({
     fetchAllArticles: build.query({
       query: () => ({
@@ -66,25 +67,67 @@ export const artApi = createApi({
             ]
           : [{ type: 'Articles', id: 'LIST' }],
     }),
+
     postArticle: build.mutation({
-      query: (data) => ({
-        // const formData = new FormData()
-        // for (let i = 0; i < data?.images?.length; i++) {
-        //   formData.append('images', data?.images[i], `image_${i}`)
-        // }
-        // return {
-        url: `ads/?title=${data?.title}&&description=${data?.description}&&price=${data?.price}`,
-        method: 'POST',
-        body: data.images,
-        // headers: {
-        //   'Content-type': 'multipart/form-data',
-        // },
+      query: ({ data, images }) => {
+        const img = new FormData()
+        images.forEach((image) => {
+          img.append(`files`, image)
+        })
+        return {
+          url: `ads/?title=${data?.title}&&description=${data?.description}&&price=${data?.price}`,
+          method: 'POST',
+          body: img,
+        }
+      },
+      invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
+    }),
+
+    deleteArticle: build.mutation({
+      query: (id) => ({
+        url: `ads/${id}`,
+        method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
     }),
+    postIext: build.mutation({
+      query: (body) => ({
+        url: `adstext`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
+    }),
+
+    postImage: build.mutation({
+      query: (data) => ({
+        url: `ads/17/image`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
+    }),
+
+    uploadAvatar: build.mutation({
+      query: (file) => ({
+        url: `user/avatar`,
+        method: 'POST',
+        body: file,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Cred', id }],
+    }),
+
     getArticlesByUserId: build.query({
       query: (id) => `ads/?user_id=${id}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Articles', id })),
+              { type: 'Articles', id: 'LIST' },
+            ]
+          : [{ type: 'Articles', id: 'LIST' }],
     }),
+
     getCommentsById: build.query({
       query: (id) => `ads/${id}/comments`,
       providesTags: (result) =>
@@ -100,9 +143,6 @@ export const artApi = createApi({
         url: `ads/${data.id}/comments`,
         method: 'POST',
         body: data.body,
-        // headers: {
-        //   'content-type': 'application/json',
-        // },
       }),
       invalidatesTags: [{ type: 'Comments', id: 'LIST' }],
     }),
@@ -127,14 +167,6 @@ export const artApi = createApi({
       }),
       providesTags: (result, error, id) => [{ type: 'Cred', id }],
     }),
-    uploadAvatar: build.mutation({
-      query: (file) => ({
-        url: `user/avatar`,
-        method: 'POST',
-        body: file,
-      }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Cred', id }],
-    }),
     changeCredentials: build.mutation({
       query: (data) => ({
         url: `user`,
@@ -149,6 +181,8 @@ export const artApi = createApi({
 export const {
   useFetchAllArticlesQuery,
   usePostArticleMutation,
+  usePostIextMutation,
+  useDeleteArticleMutation,
   useGetArticlesByUserIdQuery,
   useGetCommentsByIdQuery,
   usePostCommentMutation,
@@ -156,5 +190,6 @@ export const {
   useLoginUserMutation,
   useGetCredentialsQuery,
   useUploadAvatarMutation,
+  usePostImageMutation,
   useChangeCredentialsMutation,
 } = artApi

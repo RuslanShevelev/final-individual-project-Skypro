@@ -1,91 +1,44 @@
-import React, { useEffect, useState } from 'react'
+import { React, useState } from 'react'
 import styles from '../css/addnewat.module.scss'
 import { CloseButton } from 'components/buttons/closebutton'
 import classNames from 'classnames'
-import { usePostArticleMutation } from 'services/appService'
+import { useSelector } from 'react-redux'
+import {
+  usePostArticleMutation,
+  usePostIextMutation,
+  // usePostImageMutation,
+} from 'services/appService'
+import { usePreview } from 'hooks/usePreview'
 
-export const AddOrChangeArticle = () => {
-  const imageTypeRegex = /image\/(png|jpg|jpeg)/gm
-  const [imageFiles, setImageFiles] = useState([])
-  const [images, setImages] = useState([])
-  const [articleData, setArticleData] = useState({})
-  const [postNewArticle, result] = usePostArticleMutation()
+export const AddOrChangeArticle = ({ change }) => {
+  const { currentArt: changinData } = useSelector((state) => state.modals)
+  const [articleData, setArticleData] = useState(change ? changinData : {})
+  const [postNewArticle] = usePostArticleMutation()
+  const [postNewTexts] = usePostIextMutation()
+  // const [postImage, newImage] = usePostImageMutation()
+  const [changeHandler, images, imageFiles] = usePreview()
 
-  const changeHandler = (e) => {
-    const { files } = e.target
-    const validImageFiles = []
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      if (file.type.match(imageTypeRegex)) {
-        validImageFiles.push(file)
-      }
+  const postNewArt = (e) => {
+    e.preventDefault()
+    if (imageFiles?.length) {
+      postNewArticle({
+        data: articleData,
+        images: imageFiles,
+      })
+    } else {
+      postNewTexts(articleData)
     }
-    if (validImageFiles.length) {
-      setImageFiles([...imageFiles, ...validImageFiles])
-      return
-    }
-    alert('Недопустимый формат изображения!')
+    // if(change){}
+    // if (imageFiles.length) {
+    //   const img = new FormData()
+    //   imageFiles.forEach((image, i) => {
+    //     img.append(`image`, image)
+    //   })
+    //   setBodyImg(img)
+    // }
+    // })
   }
-  useEffect(() => {
-    if (imageFiles.length) {
-      console.log(imageFiles)
-      const formData = new FormData()
-      imageFiles.forEach((image, i) => {
-        formData.append(`image_${i}`, image)
-      })
-      // for (let i = 0; i < imageFiles.length; i++) {
-      //   )
-      // }
-      setArticleData({ ...articleData, images: formData })
-    }
-    return () => {
-      setArticleData({})
-    }
-  }, [imageFiles])
-
-  useEffect(() => {
-    const fileReaders = []
-    let isCancel = false
-    if (imageFiles.length) {
-      const promises = imageFiles.map(
-        (file) =>
-          new Promise((resolve, reject) => {
-            const fileReader = new FileReader()
-            fileReaders.push(fileReader)
-            fileReader.onload = (e) => {
-              const { result } = e.target
-              if (result) {
-                resolve(result)
-              }
-            }
-            fileReader.onabort = () => {
-              reject(new Error('File reading aborted'))
-            }
-            fileReader.onerror = () => {
-              reject(new Error('Failed to read file'))
-            }
-            fileReader.readAsDataURL(file)
-          }),
-      )
-      Promise.all(promises)
-        .then((images) => {
-          if (!isCancel) {
-            setImages(images)
-          }
-        })
-        .catch((reason) => {
-          console.log(reason)
-        })
-    }
-    return () => {
-      isCancel = true
-      fileReaders.forEach((fileReader) => {
-        if (fileReader.readyState === 1) {
-          fileReader.abort()
-        }
-      })
-    }
-  }, [imageFiles])
+  console.log(imageFiles)
 
   const inputHandler = (e) => {
     switch (e.target.name) {
@@ -102,7 +55,7 @@ export const AddOrChangeArticle = () => {
         break
     }
   }
-  console.log(result)
+
   return (
     // <div className={styles.containerModal}>
     <div className={styles.modal__block}>
@@ -122,6 +75,7 @@ export const AddOrChangeArticle = () => {
               className={styles.formNewArt__input}
               type="text"
               name="title"
+              defaultValue={articleData?.title}
               id="formName"
               placeholder="Введите название"
               onChange={(e) => {
@@ -137,8 +91,8 @@ export const AddOrChangeArticle = () => {
               id="formArea"
               cols="auto"
               rows={10}
+              defaultValue={articleData?.description}
               placeholder="Введите описание"
-              defaultValue={''}
               onChange={(e) => {
                 inputHandler(e)
               }}
@@ -149,26 +103,45 @@ export const AddOrChangeArticle = () => {
               Фотографии товара<span>не более 5 фотографий</span>
             </p>
             <ul className={styles.formNewArt__barImg}>
-              {images.length > 0 &&
+              {change &&
+                changinData?.images?.map((image) => (
+                  <li key={image.id} className={styles.formNewArt__img}>
+                    <img src={`http://localhost:8090/${image.url}`} alt="" />
+                  </li>
+                ))}
+              {images &&
                 images.map((image, idx) => (
                   <li key={idx} className={styles.formNewArt__img}>
                     <img src={image} alt="" />
                   </li>
                 ))}
-              {Array(5 - images?.length)
+              {Array(
+                5 - images?.length - (change ? changinData?.images?.length : 0),
+              )
                 .fill()
                 .map(() => (
                   <li key={Math.random()} className={styles.formNewArt__img}>
                     <label
-                      htmlFor="file"
+                      htmlFor="image"
                       className={styles.formNewArt__imgCover}
                     />
                     <input
                       type="file"
                       style={{ display: 'none' }}
-                      id="file"
-                      onChange={changeHandler}
-                      accept="image/png, image/jpg, image/jpeg"
+                      id="image"
+                      accept=".png, .jpg, .jpeg"
+                      onChange={(e) => {
+                        if (
+                          images?.length +
+                            (change ? changinData?.images?.length : 0) +
+                            e.target.files.length >
+                          5
+                        ) {
+                          alert('Возможно опубликовать только пять фотографий')
+                          return
+                        }
+                        changeHandler(e)
+                      }}
                       multiple
                     />
                   </li>
@@ -203,6 +176,7 @@ export const AddOrChangeArticle = () => {
               className={styles.formNewArt__inputPrice}
               type="number"
               name="price"
+              defaultValue={articleData?.price}
               id="formName"
               onChange={(e) => {
                 inputHandler(e)
@@ -213,13 +187,10 @@ export const AddOrChangeArticle = () => {
           <button
             className={styles.formNewArt__btnPub}
             onClick={(e) => {
-              e.preventDefault()
-              postNewArticle(articleData)
+              postNewArt(e)
             }}
-            id="btnPublish"
           >
-            {/* btn-hov02 */}
-            Опубликовать
+            {change ? 'Сохранить' : 'Опубликовать'}
           </button>
         </form>
       </div>
