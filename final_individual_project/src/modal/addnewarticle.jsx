@@ -1,22 +1,30 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import styles from '../css/addnewat.module.scss'
 import { CloseButton } from 'components/buttons/closebutton'
 import classNames from 'classnames'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setCurrentModal } from 'store/slices/modalsSlice'
 import {
   usePostArticleMutation,
   usePostIextMutation,
+  useChangeTextsMutation,
   // usePostImageMutation,
 } from 'services/appService'
 import { usePreview } from 'hooks/usePreview'
+import { MyButton } from 'components/buttons/button'
+import { Loader } from 'components/loader/loader'
 
 export const AddOrChangeArticle = ({ change }) => {
-  const { currentArt: changinData } = useSelector((state) => state.modals)
-  const [articleData, setArticleData] = useState(change ? changinData : {})
-  const [postNewArticle] = usePostArticleMutation()
-  const [postNewTexts] = usePostIextMutation()
+  const { currentArt: changingData } = useSelector((state) => state.modals)
+  const [articleData, setArticleData] = useState({})
+  const [confirm, setConfirm] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [postNewArticle, newArticle] = usePostArticleMutation()
+  const [postNewTexts, newTexts] = usePostIextMutation()
+  const [changeTexts, changedTexts] = useChangeTextsMutation()
   // const [postImage, newImage] = usePostImageMutation()
   const [changeHandler, images, imageFiles] = usePreview()
+  const dispatch = useDispatch()
 
   const postNewArt = (e) => {
     e.preventDefault()
@@ -28,7 +36,11 @@ export const AddOrChangeArticle = ({ change }) => {
     } else {
       postNewTexts(articleData)
     }
-    // if(change){}
+  }
+
+  const changeArt = (e) => {
+    e.preventDefault()
+    changeTexts({ id: changingData.id, body: { articleData } })
     // if (imageFiles.length) {
     //   const img = new FormData()
     //   imageFiles.forEach((image, i) => {
@@ -38,7 +50,48 @@ export const AddOrChangeArticle = ({ change }) => {
     // }
     // })
   }
-  console.log(imageFiles)
+  useEffect(() => {
+    if (
+      newArticle?.isSuccess ||
+      newTexts?.isSuccess ||
+      changedTexts.isSuccess
+    ) {
+      dispatch(setCurrentModal(''))
+    }
+    if (
+      newArticle?.isLoading ||
+      newTexts?.isLoading ||
+      changedTexts?.isLoading
+    ) {
+      setLoading(true)
+    }
+    return () => {
+      setLoading(false)
+    }
+  }, [newArticle, newTexts])
+
+  useEffect(() => {
+    if (
+      !change &&
+      articleData.title &&
+      articleData.description &&
+      articleData.price
+    ) {
+      setConfirm(true)
+    } else if (
+      change &&
+      (articleData.title || articleData.description || articleData.price)
+    ) {
+      setConfirm(true)
+    } else {
+      setConfirm(false)
+    }
+    return () => {
+      setConfirm(false)
+    }
+  }, [articleData])
+
+  console.log(articleData)
 
   const inputHandler = (e) => {
     switch (e.target.name) {
@@ -56,14 +109,16 @@ export const AddOrChangeArticle = ({ change }) => {
     }
   }
 
-  return (
-    // <div className={styles.containerModal}>
+  return loading ? (
+    <Loader />
+  ) : (
     <div className={styles.modal__block}>
       <div className={styles.modal__content}>
         <h3 className={styles.modal__title}>Новое объявление</h3>
         <div className={styles.modal__btnClose}>
           <CloseButton />
         </div>
+
         <form
           className={classNames(styles.modal__formNewArt, styles.formNewArt)}
           id="formNewArt"
@@ -75,7 +130,7 @@ export const AddOrChangeArticle = ({ change }) => {
               className={styles.formNewArt__input}
               type="text"
               name="title"
-              defaultValue={articleData?.title}
+              defaultValue={change ? changingData?.title : ''}
               id="formName"
               placeholder="Введите название"
               onChange={(e) => {
@@ -91,7 +146,7 @@ export const AddOrChangeArticle = ({ change }) => {
               id="formArea"
               cols="auto"
               rows={10}
-              defaultValue={articleData?.description}
+              defaultValue={change ? changingData?.description : ''}
               placeholder="Введите описание"
               onChange={(e) => {
                 inputHandler(e)
@@ -104,7 +159,7 @@ export const AddOrChangeArticle = ({ change }) => {
             </p>
             <ul className={styles.formNewArt__barImg}>
               {change &&
-                changinData?.images?.map((image) => (
+                changingData?.images?.map((image) => (
                   <li key={image.id} className={styles.formNewArt__img}>
                     <img src={`http://localhost:8090/${image.url}`} alt="" />
                   </li>
@@ -116,7 +171,9 @@ export const AddOrChangeArticle = ({ change }) => {
                   </li>
                 ))}
               {Array(
-                5 - images?.length - (change ? changinData?.images?.length : 0),
+                5 -
+                  images?.length -
+                  (change ? changingData?.images?.length : 0),
               )
                 .fill()
                 .map(() => (
@@ -133,7 +190,7 @@ export const AddOrChangeArticle = ({ change }) => {
                       onChange={(e) => {
                         if (
                           images?.length +
-                            (change ? changinData?.images?.length : 0) +
+                            (change ? changingData?.images?.length : 0) +
                             e.target.files.length >
                           5
                         ) {
@@ -146,37 +203,16 @@ export const AddOrChangeArticle = ({ change }) => {
                     />
                   </li>
                 ))}
-
-              {/* <div className={styles.formNewArt__img}>
-                <img src="" alt="" />
-                <div className={styles.formNewArt__imgCover} />
-              </div>
-              <div className={styles.formNewArt__img}>
-                <img src="" alt="" />
-                <div className={styles.formNewArt__imgCover} />
-              </div>{' '}
-              <div className={styles.formNewArt__img}>
-                <img src="" alt="" />
-                <div className={styles.formNewArt__imgCover} />
-              </div>{' '}
-              <div className={styles.formNewArt__img}>
-                <img src="" alt="" />
-                <div className={styles.formNewArt__imgCover} />
-              </div>{' '}
-              <div className={styles.formNewArt__img}>
-                <img src="" alt="" />
-                <div className={styles.formNewArt__imgCover} />
-              </div> */}
             </ul>
           </div>
           <div className={styles.formNewArt__block}>
-            {/* block-price */}
             <label htmlFor="price">Цена</label>
             <input
               className={styles.formNewArt__inputPrice}
               type="number"
+              placeholder="Введите цену"
               name="price"
-              defaultValue={articleData?.price}
+              defaultValue={change ? changingData?.price : null}
               id="formName"
               onChange={(e) => {
                 inputHandler(e)
@@ -184,17 +220,20 @@ export const AddOrChangeArticle = ({ change }) => {
             />
             <div className={styles.formNewArt__inputPriceCover} />
           </div>
-          <button
-            className={styles.formNewArt__btnPub}
-            onClick={(e) => {
-              postNewArt(e)
+          <MyButton
+            name={change ? 'Сохранить' : 'Опубликовать'}
+            width={181}
+            action={(e) => {
+              if (change) {
+                changeArt(e)
+              } else {
+                postNewArt(e)
+              }
             }}
-          >
-            {change ? 'Сохранить' : 'Опубликовать'}
-          </button>
+            disable={!confirm}
+          />
         </form>
       </div>
     </div>
-    // </div>
   )
 }

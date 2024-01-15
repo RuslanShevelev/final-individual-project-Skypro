@@ -14,10 +14,8 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions)
-  // console.log(result)
   if (result?.error?.status === 401 && api.endpoint !== 'getRegistration') {
     const authData = api.getState().auth
-    // console.log(authData)
     const refreshResult = await baseQuery(
       {
         url: 'auth/login',
@@ -34,7 +32,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions,
     )
     if (refreshResult.data) {
-      // console.log(refreshResult)
       api.dispatch(
         setTokens({
           access: refreshResult.data.access_token,
@@ -94,6 +91,14 @@ export const artApi = createApi({
       query: (body) => ({
         url: `adstext`,
         method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
+    }),
+    changeTexts: build.mutation({
+      query: ({ id, body }) => ({
+        url: `ads/${id}`,
+        method: 'PATCH',
         body,
       }),
       invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
@@ -182,6 +187,7 @@ export const {
   useFetchAllArticlesQuery,
   usePostArticleMutation,
   usePostIextMutation,
+  useChangeTextsMutation,
   useDeleteArticleMutation,
   useGetArticlesByUserIdQuery,
   useGetCommentsByIdQuery,

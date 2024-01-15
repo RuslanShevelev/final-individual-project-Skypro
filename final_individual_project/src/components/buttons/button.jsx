@@ -10,6 +10,7 @@ export const MyButton = ({
   phone,
   email,
   phoneVisibility,
+  width,
 }) => (
   <button
     disabled={disable}
@@ -18,6 +19,7 @@ export const MyButton = ({
       hideable ? classNames(styles.myButton, styles.hide) : styles.myButton
     }
     type="button"
+    style={{ width: `${width}px` }}
   >
     {name}
     <br />
