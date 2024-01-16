@@ -87,7 +87,7 @@ export const artApi = createApi({
       }),
       invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
     }),
-    postIext: build.mutation({
+    postText: build.mutation({
       query: (body) => ({
         url: `adstext`,
         method: 'POST',
@@ -194,7 +194,7 @@ export const artApi = createApi({
 export const {
   useFetchAllArticlesQuery,
   usePostArticleMutation,
-  usePostIextMutation,
+  usePostTextMutation,
   useChangeTextsMutation,
   useDeleteArticleMutation,
   useGetArticlesByUserIdQuery,

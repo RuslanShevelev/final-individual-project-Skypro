@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCurrentModal } from 'store/slices/modalsSlice'
-import styles from '../css/signin.module.scss'
+import styles from '../../css/signin.module.scss'
 import classNames from 'classnames'
 import { CloseButton } from 'components/buttons/closebutton'
 import {
@@ -27,7 +27,6 @@ export const SignIn = () => {
   const [loginUser, data] = useLoginUserMutation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  // console.log(data)
   useEffect(() => {
     if (regForm) {
       if (emailError || passwordError || controlError) {
@@ -143,21 +142,31 @@ export const SignIn = () => {
     }
   }
   useEffect(() => {
+    if (result.isSuccess && regForm) {
+      loginUser({
+        email: result?.originalArgs?.email,
+        password: result?.originalArgs?.password,
+      })
+      setRegForm(false)
+    }
+  }, [result, regForm])
+
+  useEffect(() => {
     if (data.isSuccess) {
       dispatch(setCurrentModal(''))
       navigate(`/myProfile`, {
         replace: true,
       })
     }
-    if (data.isError) {
-      setApiError(data.error.data)
-      // console.log(data)
-      // console.log(apiErrors)
+    if (data?.isError || result?.isError) {
+      setApiError(data?.error?.data)
     }
-  }, [data])
+    return () => {
+      setRegData({ role: 'user' })
+    }
+  }, [data, apiErrors])
 
   return (
-    // <div className={styles.wrapper}>
     <div className={styles.container_enter}>
       <div className={styles.modal__block}>
         <form className={styles.modal__formLogin} id="formLogIn" action="#">
@@ -256,14 +265,12 @@ export const SignIn = () => {
           ) : (
             <>
               <input
-                // value={email}
                 className={classNames(styles.modal__input, styles.login)}
                 onChange={(e) => {
                   inputHandler(e)
                 }}
                 type="text"
                 name="email"
-                // id="formlogin"
                 placeholder="email"
                 onBlur={(e) => {
                   blurHandler(e)
@@ -274,7 +281,6 @@ export const SignIn = () => {
               )}
               <input
                 className={classNames(styles.modal__input, styles.password)}
-                // value={password}
                 onChange={(e) => {
                   inputHandler(e)
                 }}
@@ -346,8 +352,6 @@ export const SignIn = () => {
                   />
                 </>
               )}
-              {/* <MyButton name={regForm ? 'Зарегистрироваться' : 'Войти'} /> */}
-
               <button
                 className={styles.modal__btnEnter}
                 disabled={!validForm}
@@ -381,6 +385,5 @@ export const SignIn = () => {
         </form>
       </div>
     </div>
-    // </div>
   )
 }

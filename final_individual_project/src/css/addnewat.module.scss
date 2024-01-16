@@ -29,9 +29,6 @@
   &__block {
     position: relative;
     z-index: 2;
-    // left: calc(50% - (600px / 2));
-    // top: 60px;
-    // opacity: 1;
   }
   &__content {
     display: flex;
@@ -71,7 +68,6 @@
 
 .formNewArt {
   & label {
-    // margin-bottom: 4px;
     font-size: 16px;
     line-height: 24px;
     color: #000000;
@@ -145,7 +141,6 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-    // overflow: hidden;
   }
 
   &__imgCover {
@@ -183,7 +178,6 @@
     transition: all 0.5s;
     &:hover {
       transform: scale(1.05);
-      // border: 1px solid #009ee4;
       & img {
         display: none;
       }
@@ -231,7 +225,6 @@
       font-size: 16px;
       line-height: 24px;
       color: #000000;
-      //   z-index: 2;
     }
   }
 

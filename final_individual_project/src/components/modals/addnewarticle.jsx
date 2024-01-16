@@ -1,12 +1,12 @@
 import { React, useState, useEffect } from 'react'
-import styles from '../css/addnewat.module.scss'
+import styles from '../../css/addnewat.module.scss'
 import { CloseButton } from 'components/buttons/closebutton'
 import classNames from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentModal } from 'store/slices/modalsSlice'
 import {
   usePostArticleMutation,
-  usePostIextMutation,
+  usePostTextMutation,
   useChangeTextsMutation,
   usePostImageMutation,
   useDeleteImageMutation,
@@ -19,11 +19,11 @@ import Skeleton from 'react-loading-skeleton'
 export const AddOrChangeArticle = ({ change }) => {
   const { currentArt: changingData } = useSelector((state) => state.modals)
   const [articleData, setArticleData] = useState({})
-  // const [selectedFiles, setSelecteddFiles] = useState({})
+  const [selectedFiles, setSelectedFiles] = useState([])
   const [confirm, setConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [postNewArticle, newArticle] = usePostArticleMutation()
-  const [postNewTexts, newTexts] = usePostIextMutation()
+  const [postNewTexts, newTexts] = usePostTextMutation()
   const [changeTexts, changedTexts] = useChangeTextsMutation()
   const [postImage, newImage] = usePostImageMutation()
   const [deleteImage, deleteingImg] = useDeleteImageMutation()
@@ -55,9 +55,11 @@ export const AddOrChangeArticle = ({ change }) => {
       })
     }
   }
-  // useEffect(() => {
-  //   previewImages(selectedFiles)
-  // }, [selectedFiles])
+  useEffect(() => {
+    if (selectedFiles?.length) {
+      previewImages(selectedFiles)
+    }
+  }, [selectedFiles])
 
   useEffect(() => {
     if (
@@ -117,20 +119,24 @@ export const AddOrChangeArticle = ({ change }) => {
         setArticleData({ ...articleData, price: e.target.value })
         break
       case 'file':
-        if (
-          images?.length +
-            (change ? changingData?.images?.length : 0) +
-            e.target.files.length >
-          5
-        ) {
-          alert('Возможно опубликовать только пять фотографий')
-          return
+        {
+          if (
+            images?.length +
+              (change ? changingData?.images?.length : 0) +
+              e.target.files.length >
+            5
+          ) {
+            alert('Возможно опубликовать только пять фотографий')
+            return
+          }
+          const { files } = e.target
+          let arr = []
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i]
+            arr = [...arr, file]
+          }
+          setSelectedFiles([...selectedFiles, ...arr])
         }
-        // for (let i = 0; i < e.target.files.length; i++) {
-        //   const file = e.target.files[i]
-        //   files.push(file)
-        // }
-        previewImages(e)
         break
 
       default:
@@ -212,7 +218,16 @@ export const AddOrChangeArticle = ({ change }) => {
                 ))}
               {images &&
                 images.map((image, idx) => (
-                  <li key={idx} className={styles.formNewArt__img}>
+                  <li
+                    key={idx}
+                    className={styles.formNewArt__img}
+                    onClick={() => {
+                      setSelectedFiles([
+                        ...selectedFiles.slice(0, idx),
+                        ...selectedFiles.slice(idx + 1),
+                      ])
+                    }}
+                  >
                     <img src={image} alt="" />
                   </li>
                 ))}
@@ -237,17 +252,6 @@ export const AddOrChangeArticle = ({ change }) => {
                       onChange={(e) => {
                         inputHandler(e)
                       }}
-                      //   if (
-                      //     images?.length +
-                      //       (change ? changingData?.images?.length : 0) +
-                      //       e.target.files.length >
-                      //     5
-                      //   ) {
-                      //     alert('Возможно опубликовать только пять фотографий')
-                      //     return
-                      //   }
-                      //   changeHandler(e)
-                      // }}
                       multiple
                     />
                   </li>

@@ -8,33 +8,41 @@ import icon02 from '../img/icon_02.png'
 import icon03 from '../img/icon_03.png'
 import { MyButton } from 'components/buttons/button'
 import { Header } from 'components/header/header'
-import { AddOrChangeArticle } from 'modal/addnewarticle'
-import { SignIn } from 'modal/signin'
-import { Reviews } from 'modal/reviews'
-import { UploadImage } from 'modal/upload-image/upload_image'
+import { AddOrChangeArticle } from 'components/modals/addnewarticle'
+import { SignIn } from 'components/modals/signin'
+import { Reviews } from 'components/modals/reviews'
+import { UploadImage } from 'components/modals/upload_image'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { useFetchAllArticlesQuery } from 'services/appService'
 
 export const Layout = () => {
   useFetchAllArticlesQuery()
   const dispatch = useDispatch()
-  // const [page, setPage] = useState('Main')
   const page = useSelector((state) => state.modals.currentPage)
   const modal = useSelector((state) => state.modals.currentModal)
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
 
-  // console.log(params)
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <Header />
         <main className={styles.main}>
           <div className={styles.main__search}>
-            <a className={styles.search__logoLink} href="#" target="_blank">
-              <div className={styles.search__logo_img} />
-            </a>
-            <form className={styles.search__form} action="#">
+            <div className={styles.search__logo_img} />
+            <form
+              className={styles.search__form}
+              action="#"
+              onSubmit={(e) => {
+                e.preventDefault()
+                if (page === 'Main') {
+                  dispatch(findArticles(search))
+                }
+                navigate(`/`, {
+                  replace: false,
+                })
+              }}
+            >
               {page === 'Main' && (
                 <input
                   className={styles.search__text}
@@ -42,6 +50,7 @@ export const Layout = () => {
                   placeholder="Поиск по объявлениям"
                   name="search"
                   onChange={(e) => {
+                    e.preventDefault()
                     setSearch(e.target.value === '' ? 'clear' : e.target.value)
                   }}
                 />
@@ -55,7 +64,6 @@ export const Layout = () => {
                   navigate(`/`, {
                     replace: false,
                   })
-                  // setPage('Main')
                 }}
                 hideable
               />

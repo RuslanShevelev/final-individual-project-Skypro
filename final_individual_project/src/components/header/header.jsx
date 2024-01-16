@@ -10,7 +10,6 @@ import { logout } from 'store/slices/authSlice'
 export const Header = () => {
   const { isAuth } = useAuth()
   const navigate = useNavigate()
-  // console.log(isAuth)
   const dispatch = useDispatch()
   const page = useSelector((state) => state.modals.currentPage)
 

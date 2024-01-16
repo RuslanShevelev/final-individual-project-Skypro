@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styles from '../css/reviews.module.scss'
+import styles from '../../css/reviews.module.scss'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { CloseButton } from 'components/buttons/closebutton'

@@ -61,12 +61,6 @@ export const modalSlice = createSlice({
         state.displayArticles = payload
       },
     )
-    // builder.addMatcher(
-    //   artApi.endpoints.getCommentsById.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.comments = payload
-    //   },
-    // )
   },
 })
 

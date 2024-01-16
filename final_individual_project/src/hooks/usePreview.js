@@ -6,22 +6,19 @@ export function usePreview() {
   const [imageFiles, setImageFiles] = useState([])
   const [images, setImages] = useState([])
 
-  const previewImages = (e) => {
-    const { files } = e.target
-    const validImageFiles = []
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
+  const previewImages = (files) => {
+    let validImageFiles = []
+    files.forEach((file) => {
       if (file.type.match(imageTypeRegex)) {
-        validImageFiles.push(file)
+        validImageFiles = [...validImageFiles, file]
       }
-    }
+    })
     if (validImageFiles.length) {
-      setImageFiles([...imageFiles, ...validImageFiles])
+      setImageFiles([...validImageFiles])
       return
     }
     alert('Недопустимый формат изображения!')
   }
-
   useEffect(() => {
     const images = []
     const fileReaders = []
@@ -36,6 +33,8 @@ export function usePreview() {
             images.push(result)
           }
           if (images.length === imageFiles.length && !isCancel) {
+            console.log(images)
+
             setImages(images)
           }
         }

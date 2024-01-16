@@ -153,7 +153,6 @@ export const Article = () => {
                 <div
                   className={styles.article__link}
                   onClick={() => {
-                    // setReviews(true)
                     dispatch(setCurrentModal('reviewsModal'))
                   }}
                 >
@@ -255,13 +254,6 @@ export const Article = () => {
               </div>
             </div>
           </div>
-          {/* {reviews && (
-            <Reviews
-              close={() => {
-                setReviews(false)
-              }}
-            />
-          )} */}
         </div>
       </div>
       <div className={styles.main__container}>
@@ -271,7 +263,6 @@ export const Article = () => {
         <div className={styles.main__content}>
           {data && <p className={styles.main__text}>{data.description}</p>}
         </div>
-        {/* {newArticle && <addOrChangeArticle />} */}
       </div>
     </>
   )

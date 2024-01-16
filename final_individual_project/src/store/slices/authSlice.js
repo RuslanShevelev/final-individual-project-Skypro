@@ -18,39 +18,12 @@ const initialState = {
   access: tokens?.access ?? '',
   refresh: tokens?.refresh ?? '',
   id: tokens?.id ?? null,
-  // name: '',
-  // email: '',
-  // city: '',
-  // avatar: '',
-  // sells_from: '',
-  // phone: '',
-  // role: '',
-  // surname: '',
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // setAuth(state, action) {
-    //   const payload = action.payload ?? initialState
-    //   state.isAuth = payload.isAuth
-    //   state.access = payload.access
-    //   state.refresh = payload.refresh
-    //   if (action.payload) {
-    //     localStorage.setItem(
-    //       AUTH_KEY,
-    //       JSON.stringify({
-    //         isAuth: state.isAuth,
-    //         access: state.access,
-    //         refresh: state.refresh,
-    //       }),
-    //     )
-    //   } else {
-    //     localStorage.removeItem(AUTH_KEY)
-    //     state = initialState
-    //   }
-    // },
     setTokens(state, action) {
       const payload = action.payload ?? initialState
       state.access = payload.access
@@ -82,21 +55,6 @@ const authSlice = createSlice({
         localStorage.setItem(AUTH_KEY, JSON.stringify(state))
       },
     )
-    // builder.addMatcher(
-    //   artApi.endpoints.changeCredentials.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.name = payload.name
-    //     state.city = payload.city
-    //     state.phone = payload.phone
-    //     state.surname = payload.surname
-    //   },
-    // )
-    // builder.addMatcher(
-    //   artApi.endpoints.uploadAvatar.matchFulfilled,
-    //   (state, { payload }) => {
-    //     state.avatar = payload.avatar
-    //   },
-    // )
   },
 })
 export const { logout, setTokens } = authSlice.actions

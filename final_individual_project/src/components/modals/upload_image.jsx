@@ -19,7 +19,6 @@ export const UploadImage = () => {
     const avatar = new FormData()
     avatar.append('file', file)
     uploadAvatar(avatar)
-    // console.log(avatar?.getAll('file'))
   }
   const changeHandler = (e) => {
     const file = e.target.files[0]

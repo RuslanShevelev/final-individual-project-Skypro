@@ -37,7 +37,6 @@ export const Profile = ({ myProfile }) => {
   useEffect(() => {
     dispatch(setCurrentPage(myProfile ? 'myProfile' : 'Profile'))
   }, [])
-  // console.log(newCred)
 
   const inputHandler = (e) => {
     switch (e.target.name) {
@@ -63,7 +62,9 @@ export const Profile = ({ myProfile }) => {
       <div className={styles.main__centerBlock}>
         <h2 className={styles.main__h2}>
           {myProfile
-            ? `Здравствуйте, ${credentials?.name}!`
+            ? `Здравствуйте, ${
+                credentials?.name ? credentials?.name : 'введите данные профиля'
+              }!`
             : 'Профиль продавца'}
         </h2>
         <div className={classNames(styles.main__profile, styles.profile)}>
@@ -109,7 +110,6 @@ export const Profile = ({ myProfile }) => {
                       <label htmlFor="fname">Имя</label>
                       <input
                         className={styles.settings__fName}
-                        // id="settings-fname"
                         name="name"
                         type="text"
                         onChange={(e) => {

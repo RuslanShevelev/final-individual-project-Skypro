@@ -23,12 +23,8 @@ export const AppRoutes = () => {
       element: <ProtectedRoute isAllowed={isAuth} />,
       children: [
         { path: '/myProfile', element: <Profile myProfile={isAuth} /> },
-        // { path: '/', element: <Main /> },
-        // { path: '/favorites', element: <Favorites /> },
-        // { path: '/category/:id', element: <Categories /> },
       ],
     },
-    // { path: '*', element: <NotFound /> },
   ])
   return element
 }

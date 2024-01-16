@@ -1,22 +1,10 @@
-// .wrapper {
-//   width: 100%;
-//   min-height: 100%;
-//   overflow: hidden;
-// }
 
 .container_enter {
-  // max-width: 100%;
-  // max-height: 100vh;
-  // margin: 0 auto;
-  // position: relative;
-  // background-color: #009ee4;
   position: fixed;
-  //   left: 0px;
   inset: 0;
   width: auto;
   height: auto;
   z-index: 2;
-  //   inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
@@ -50,14 +38,6 @@
 //=============================
 
 .modal {
-  // &__block {
-  //     position: absolute;
-  //     z-index: 2;
-  //     left: calc(50% - (366px/2));
-  //     top: calc(50% - (439px/2));
-  //     opacity: 1;
-  // }
-
   &__formLogin {
     position: relative;
     width: 366px;
@@ -90,7 +70,6 @@
     border-right: none;
     border-bottom: 1px solid #d0cece;
     padding: 8px 1px;
-    // margin-bottom: 38px;
     outline: none;
     &::placeholder {
       font-style: normal;
@@ -187,12 +166,6 @@ cursor: default;
     background-color: #f0f0f0;
     background-position: center;
     background-size: cover;
-    // & img {
-    //   display: block;
-    //   width: 100%;
-    //   height: auto;
-    //   object-fit: cover;
-    // }
   }
 
 }
@@ -200,19 +173,10 @@ cursor: default;
 
 @media screen and (max-width: 768px) {
   .modal {
-    // &__block {
-    //   position: absolute;
-    //   z-index: 2;
-    //   left: calc(50% - (320px / 2));
-    //   top: 55px;
-    //   opacity: 1;
-    // }
-
     &__formLogin {
       width: 320px;
       height: auto;
       background-color: #ffffff;
-      //   border-radius: 0px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -248,7 +212,6 @@ cursor: default;
 
     &__btnEnter {
       height: 46px;
-      //   margin-top: 40px;
       margin-bottom: 10px;
       border: none;
     }
