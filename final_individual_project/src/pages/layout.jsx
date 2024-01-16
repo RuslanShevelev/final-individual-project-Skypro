@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { findArticles } from 'store/slices/modalsSlice'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import styles from '../css/layout.module.scss'
 import icon01 from '../img/icon_01.png'
 import icon02 from '../img/icon_02.png'
@@ -85,9 +85,9 @@ export const Layout = () => {
         <footer className={styles.footer}>
           <div className={styles.footer__container}>
             <div className={styles.footer__img}>
-              <a href="" target="_self">
+              <NavLink to={`/`}>
                 <img src={icon01} alt="home" />
-              </a>
+              </NavLink>
             </div>
             <div className={styles.footer__img}>
               <a href="" target="_self">
@@ -95,9 +95,9 @@ export const Layout = () => {
               </a>
             </div>
             <div className={styles.footer__img}>
-              <a href="" target="_self">
+              <NavLink to={'/myProfile'}>
                 <img src={icon03} alt="home" />
-              </a>
+              </NavLink>
             </div>
           </div>
         </footer>

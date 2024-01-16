@@ -15,6 +15,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { formatRelative, format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { MyButton } from 'components/buttons/button'
+import { MobileButton } from 'components/buttons/mobileBtn'
 import {
   useGetCommentsByIdQuery,
   useDeleteArticleMutation,
@@ -69,6 +70,7 @@ export const Article = () => {
         <div className={classNames(styles.artic__content, styles.article)}>
           <div className={styles.article__left}>
             <div className={styles.article__fillImg}>
+              <MobileButton color={'black'} />
               <div className={styles.article__img}>
                 {data ? (
                   <img
@@ -112,23 +114,6 @@ export const Article = () => {
                         </li>
                       ))}
               </ul>
-              <div
-                className={classNames(
-                  styles.article__imgBarMob,
-                  styles.imgBarMob,
-                )}
-              >
-                <div
-                  className={classNames(
-                    styles.imgBarMob__circle,
-                    styles.circleActive,
-                  )}
-                />
-                <div className={styles.imgBarMob__circle} />
-                <div className={styles.imgBarMob__circle} />
-                <div className={styles.imgBarMob__circle} />
-                <div className={styles.imgBarMob__circle} />
-              </div>
             </div>
           </div>
           <div className={styles.article__right}>

@@ -13,12 +13,6 @@
 
 // ========== activ ========
 
-.circleActive {
-  background-color: #ffffff;
-}
-.img-bar-mob__circle:active {
-  background-color: #ffffff;
-}
 
 // =================== main ====================//
 
@@ -95,9 +89,9 @@
       object-fit: cover;
     }
   }
-  &__imgBarMob {
-    display: none;
-  }
+  // &__imgBarMob {
+  //   display: none;
+  // }
   &__imgBar {
     margin-top: 30px;
     width: 490px;
@@ -310,21 +304,6 @@
       align-items: center;
       justify-content: center;
       position: relative;
-
-      &::before {
-        content: '';
-        display: block;
-        width: 23px;
-        height: 23px;
-        background-color: transparent;
-        border-top: 2px solid #000000;
-        border-left: 2px solid #000000;
-        transform: rotate(-45deg);
-        position: absolute;
-        top: 24px;
-        left: 32px;
-        cursor: pointer;
-      }
     }
 
     &__img {
@@ -336,19 +315,30 @@
     }
 
     &__imgBar {
-      display: none;
-    }
-    &__imgBarMob {
-      display: block;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
       width: 68px;
       height: 8px;
       position: absolute;
       bottom: 20px;
       left: calc(50% - (68px / 2));
-      display: flex;
-      justify-content: space-between;
     }
-
+    &__imgBarDiv {
+      min-width: 8px;
+      width: 8px;
+      height: 8px;
+      margin: 0;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      background: #F0F0F0;
+      & img {
+        display: none;
+      }
+      &_active {
+          background-color: #ffffff;
+      }
+    }
     &__right {
       max-width: 100%;
       width: 100%;
@@ -399,15 +389,6 @@
     &__author {
       margin-top: 30px;
       margin-bottom: 30px;
-    }
-  }
-
-  .imgBarMob {
-    &__circle {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border: 1px solid #ffffff;
     }
   }
 
