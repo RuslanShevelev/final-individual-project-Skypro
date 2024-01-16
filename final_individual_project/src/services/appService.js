@@ -105,10 +105,18 @@ export const artApi = createApi({
     }),
 
     postImage: build.mutation({
-      query: (data) => ({
-        url: `ads/17/image`,
+      query: ({ id, body }) => ({
+        url: `ads/${id}/image`,
         method: 'POST',
-        body: data,
+        body,
+      }),
+      invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
+    }),
+
+    deleteImage: build.mutation({
+      query: ({ id, url }) => ({
+        url: `ads/${id}/image/?file_url=${url}`,
+        method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Articles', id: 'LIST' }],
     }),
@@ -197,5 +205,6 @@ export const {
   useGetCredentialsQuery,
   useUploadAvatarMutation,
   usePostImageMutation,
+  useDeleteImageMutation,
   useChangeCredentialsMutation,
 } = artApi

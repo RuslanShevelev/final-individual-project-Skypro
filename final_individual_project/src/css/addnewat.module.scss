@@ -176,16 +176,25 @@
     width: 85px;
     height: 85px;
     position: relative;
+    overflow: hidden;
     margin: 0;
+    background-image: url(../img/delete.jpg);
+    background-size: contain;
+    transition: all 0.5s;
     &:hover {
       transform: scale(1.05);
-      border: 1px solid #009ee4;
+      // border: 1px solid #009ee4;
+      & img {
+        display: none;
+      }
     }
     & img {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
+      &:hover{display: none;}
+
     }
   }
 

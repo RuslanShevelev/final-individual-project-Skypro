@@ -8,27 +8,31 @@ import {
   usePostArticleMutation,
   usePostIextMutation,
   useChangeTextsMutation,
-  // usePostImageMutation,
+  usePostImageMutation,
+  useDeleteImageMutation,
 } from 'services/appService'
 import { usePreview } from 'hooks/usePreview'
 import { MyButton } from 'components/buttons/button'
 import { Loader } from 'components/loader/loader'
+import Skeleton from 'react-loading-skeleton'
 
 export const AddOrChangeArticle = ({ change }) => {
   const { currentArt: changingData } = useSelector((state) => state.modals)
   const [articleData, setArticleData] = useState({})
+  // const [selectedFiles, setSelecteddFiles] = useState({})
   const [confirm, setConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [postNewArticle, newArticle] = usePostArticleMutation()
   const [postNewTexts, newTexts] = usePostIextMutation()
   const [changeTexts, changedTexts] = useChangeTextsMutation()
-  // const [postImage, newImage] = usePostImageMutation()
-  const [changeHandler, images, imageFiles] = usePreview()
+  const [postImage, newImage] = usePostImageMutation()
+  const [deleteImage, deleteingImg] = useDeleteImageMutation()
+  const [previewImages, images, imageFiles] = usePreview()
   const dispatch = useDispatch()
 
   const postNewArt = (e) => {
     e.preventDefault()
-    if (imageFiles?.length) {
+    if (confirm && imageFiles?.length) {
       postNewArticle({
         data: articleData,
         images: imageFiles,
@@ -40,21 +44,26 @@ export const AddOrChangeArticle = ({ change }) => {
 
   const changeArt = (e) => {
     e.preventDefault()
-    changeTexts({ id: changingData.id, body: { articleData } })
-    // if (imageFiles.length) {
-    //   const img = new FormData()
-    //   imageFiles.forEach((image, i) => {
-    //     img.append(`image`, image)
-    //   })
-    //   setBodyImg(img)
-    // }
-    // })
+    if (confirm) {
+      changeTexts({ id: changingData.id, body: articleData })
+    }
+    if (imageFiles.length) {
+      imageFiles.forEach((image) => {
+        const img = new FormData()
+        img.append(`file`, image)
+        postImage({ id: changingData.id, body: img })
+      })
+    }
   }
+  // useEffect(() => {
+  //   previewImages(selectedFiles)
+  // }, [selectedFiles])
+
   useEffect(() => {
     if (
       newArticle?.isSuccess ||
       newTexts?.isSuccess ||
-      changedTexts.isSuccess
+      changedTexts?.isSuccess
     ) {
       dispatch(setCurrentModal(''))
     }
@@ -68,7 +77,7 @@ export const AddOrChangeArticle = ({ change }) => {
     return () => {
       setLoading(false)
     }
-  }, [newArticle, newTexts])
+  }, [newArticle, newTexts, changedTexts])
 
   useEffect(() => {
     if (
@@ -80,7 +89,10 @@ export const AddOrChangeArticle = ({ change }) => {
       setConfirm(true)
     } else if (
       change &&
-      (articleData.title || articleData.description || articleData.price)
+      (articleData.title ||
+        articleData.description ||
+        articleData.price ||
+        imageFiles.length)
     ) {
       setConfirm(true)
     } else {
@@ -89,9 +101,9 @@ export const AddOrChangeArticle = ({ change }) => {
     return () => {
       setConfirm(false)
     }
-  }, [articleData])
+  }, [articleData, imageFiles])
 
-  console.log(articleData)
+  console.log(newImage)
 
   const inputHandler = (e) => {
     switch (e.target.name) {
@@ -104,6 +116,23 @@ export const AddOrChangeArticle = ({ change }) => {
       case 'price':
         setArticleData({ ...articleData, price: e.target.value })
         break
+      case 'file':
+        if (
+          images?.length +
+            (change ? changingData?.images?.length : 0) +
+            e.target.files.length >
+          5
+        ) {
+          alert('Возможно опубликовать только пять фотографий')
+          return
+        }
+        // for (let i = 0; i < e.target.files.length; i++) {
+        //   const file = e.target.files[i]
+        //   files.push(file)
+        // }
+        previewImages(e)
+        break
+
       default:
         break
     }
@@ -114,7 +143,9 @@ export const AddOrChangeArticle = ({ change }) => {
   ) : (
     <div className={styles.modal__block}>
       <div className={styles.modal__content}>
-        <h3 className={styles.modal__title}>Новое объявление</h3>
+        <h3 className={styles.modal__title}>
+          {change ? 'Изменить' : 'Новое'} объявление
+        </h3>
         <div className={styles.modal__btnClose}>
           <CloseButton />
         </div>
@@ -160,8 +191,23 @@ export const AddOrChangeArticle = ({ change }) => {
             <ul className={styles.formNewArt__barImg}>
               {change &&
                 changingData?.images?.map((image) => (
-                  <li key={image.id} className={styles.formNewArt__img}>
-                    <img src={`http://localhost:8090/${image.url}`} alt="" />
+                  <li
+                    key={image.id}
+                    className={styles.formNewArt__img}
+                    onClick={() => {
+                      deleteImage({ id: image.ad_id, url: image.url })
+                    }}
+                  >
+                    {deleteingImg.isLoading &&
+                    deleteingImg.originalArgs.url === image.url ? (
+                      <Skeleton
+                        height={83}
+                        baseColor="#f0f0f0;"
+                        highlightColor="#00C1FF"
+                      />
+                    ) : (
+                      <img src={`http://localhost:8090/${image.url}`} alt="" />
+                    )}
                   </li>
                 ))}
               {images &&
@@ -184,21 +230,24 @@ export const AddOrChangeArticle = ({ change }) => {
                     />
                     <input
                       type="file"
+                      name="file"
                       style={{ display: 'none' }}
                       id="image"
                       accept=".png, .jpg, .jpeg"
                       onChange={(e) => {
-                        if (
-                          images?.length +
-                            (change ? changingData?.images?.length : 0) +
-                            e.target.files.length >
-                          5
-                        ) {
-                          alert('Возможно опубликовать только пять фотографий')
-                          return
-                        }
-                        changeHandler(e)
+                        inputHandler(e)
                       }}
+                      //   if (
+                      //     images?.length +
+                      //       (change ? changingData?.images?.length : 0) +
+                      //       e.target.files.length >
+                      //     5
+                      //   ) {
+                      //     alert('Возможно опубликовать только пять фотографий')
+                      //     return
+                      //   }
+                      //   changeHandler(e)
+                      // }}
                       multiple
                     />
                   </li>

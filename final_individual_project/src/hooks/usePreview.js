@@ -6,7 +6,7 @@ export function usePreview() {
   const [imageFiles, setImageFiles] = useState([])
   const [images, setImages] = useState([])
 
-  const changeHandler = (e) => {
+  const previewImages = (e) => {
     const { files } = e.target
     const validImageFiles = []
     for (let i = 0; i < files.length; i++) {
@@ -52,5 +52,5 @@ export function usePreview() {
     }
   }, [imageFiles])
 
-  return [changeHandler, images, imageFiles]
+  return [previewImages, images, imageFiles]
 }
