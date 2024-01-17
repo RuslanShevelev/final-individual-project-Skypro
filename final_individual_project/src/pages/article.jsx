@@ -70,7 +70,14 @@ export const Article = () => {
         <div className={classNames(styles.artic__content, styles.article)}>
           <div className={styles.article__left}>
             <div className={styles.article__fillImg}>
-              <MobileButton color={'black'} />
+              <MobileButton
+                color={'white'}
+                action={() => {
+                  navigate(myArticle ? `/myProfile` : '/', {
+                    replace: true,
+                  })
+                }}
+              />
               <div className={styles.article__img}>
                 {data ? (
                   <img

@@ -6,6 +6,7 @@ import { CloseButton } from 'components/buttons/closebutton'
 import { Comment } from 'components/comment/comment'
 import { useAuth } from 'hooks/use-auth'
 import { usePostCommentMutation } from 'services/appService'
+import { MobileButton } from 'components/buttons/mobileBtn'
 
 export const Reviews = ({ close }) => {
   const data = useSelector((state) => state.modals.comments)
@@ -31,77 +32,73 @@ export const Reviews = ({ close }) => {
   }, [newData])
 
   return (
-    <div className={styles.containerBg}>
-      <div className={styles.modal__block}>
-        <div className={styles.modal__content}>
-          <h3 className={styles.modal__title}>Отзывы о товаре</h3>
-          <div className={styles.modal__btnClose} onClick={close}>
-            <CloseButton />
-          </div>
-          <div className={styles.modal}>
-            {isAuth && (
-              <form
-                className={classNames(
-                  styles.modal__formNewArt,
-                  styles.formNewArt,
-                )}
-                id="formNewArt"
-                action="#"
-              >
-                <div className={styles.formNewArt__block}>
-                  <label htmlFor="text">Добавить отзыв</label>
-                  <textarea
-                    className={styles.formNewArt__area}
-                    name="text"
-                    id="formArea"
-                    cols="auto"
-                    rows={5}
-                    placeholder="Введите описание"
-                    defaultValue={''}
-                    value={newComment?.body?.text}
-                    onChange={(e) => {
-                      setNewComment({
-                        ...newComment,
-                        body: { text: e.target.value },
-                      })
-                    }}
-                  />
-                </div>
-                <button
-                  className={styles.formNewArt__btnPub}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    postComment(newComment)
-                  }}
-                  disabled={
-                    newComment?.body?.text === '' ||
-                    !newComment?.body ||
-                    newData?.isLoading
-                  }
-                >
-                  {newData?.isLoading ? 'Отправка...' : 'Опубликовать'}
-                </button>
-              </form>
-            )}
-            <ul
+    <div className={styles.modal__block}>
+      <div className={styles.modal__content}>
+        <MobileButton zInd={3} />
+        <h3 className={styles.modal__title}>Отзывы о товаре</h3>
+        <div className={styles.modal__btnClose} onClick={close}>
+          <CloseButton />
+        </div>
+        <div className={styles.modal}>
+          {isAuth && (
+            <form
               className={classNames(
-                styles.modal__reviews,
-                styles.modal__scroll,
+                styles.modal__formNewArt,
+                styles.formNewArt,
               )}
+              id="formNewArt"
+              action="#"
             >
-              {data &&
-                data?.map((item) => (
-                  <li key={item.id}>
-                    <Comment
-                      name={item?.author?.name}
-                      date={item?.created_on}
-                      comment={item?.text}
-                      img={item?.author?.avatar}
-                    />
-                  </li>
-                ))}
-            </ul>
-          </div>
+              <div className={styles.formNewArt__block}>
+                <label htmlFor="text">Добавить отзыв</label>
+                <textarea
+                  className={styles.formNewArt__area}
+                  name="text"
+                  id="formArea"
+                  cols="auto"
+                  rows={5}
+                  placeholder="Введите описание"
+                  defaultValue={''}
+                  value={newComment?.body?.text}
+                  onChange={(e) => {
+                    setNewComment({
+                      ...newComment,
+                      body: { text: e.target.value },
+                    })
+                  }}
+                />
+              </div>
+              <button
+                className={styles.formNewArt__btnPub}
+                onClick={(e) => {
+                  e.preventDefault()
+                  postComment(newComment)
+                }}
+                disabled={
+                  newComment?.body?.text === '' ||
+                  !newComment?.body ||
+                  newData?.isLoading
+                }
+              >
+                {newData?.isLoading ? 'Отправка...' : 'Опубликовать'}
+              </button>
+            </form>
+          )}
+          <ul
+            className={classNames(styles.modal__reviews, styles.modal__scroll)}
+          >
+            {data &&
+              data?.map((item) => (
+                <li key={item.id}>
+                  <Comment
+                    name={item?.author?.name}
+                    date={item?.created_on}
+                    comment={item?.text}
+                    img={item?.author?.avatar}
+                  />
+                </li>
+              ))}
+          </ul>
         </div>
       </div>
     </div>

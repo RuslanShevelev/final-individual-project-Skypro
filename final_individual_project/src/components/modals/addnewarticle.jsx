@@ -15,6 +15,7 @@ import { usePreview } from 'hooks/usePreview'
 import { MyButton } from 'components/buttons/button'
 import { Loader } from 'components/loader/loader'
 import Skeleton from 'react-loading-skeleton'
+import { MobileButton } from 'components/buttons/mobileBtn'
 
 export const AddOrChangeArticle = ({ change }) => {
   const { currentArt: changingData } = useSelector((state) => state.modals)
@@ -148,6 +149,7 @@ export const AddOrChangeArticle = ({ change }) => {
     <Loader />
   ) : (
     <div className={styles.modal__block}>
+      <MobileButton />
       <div className={styles.modal__content}>
         <h3 className={styles.modal__title}>
           {change ? 'Изменить' : 'Новое'} объявление

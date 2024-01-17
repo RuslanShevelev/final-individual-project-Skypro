@@ -1,6 +1,6 @@
 import { React, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { findArticles } from 'store/slices/modalsSlice'
+import { findArticles, setCurrentModal } from 'store/slices/modalsSlice'
 import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import styles from '../css/layout.module.scss'
 import icon01 from '../img/icon_01.png'
@@ -14,6 +14,7 @@ import { Reviews } from 'components/modals/reviews'
 import { UploadImage } from 'components/modals/upload_image'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import { useFetchAllArticlesQuery } from 'services/appService'
+import { useAuth } from 'hooks/use-auth'
 
 export const Layout = () => {
   useFetchAllArticlesQuery()
@@ -22,6 +23,7 @@ export const Layout = () => {
   const modal = useSelector((state) => state.modals.currentModal)
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
+  const { isAuth } = useAuth()
 
   return (
     <div className={styles.wrapper}>
@@ -89,15 +91,25 @@ export const Layout = () => {
                 <img src={icon01} alt="home" />
               </NavLink>
             </div>
-            <div className={styles.footer__img}>
-              <a href="" target="_self">
-                <img src={icon02} alt="home" />
-              </a>
+            <div
+              className={styles.footer__img}
+              onClick={() => dispatch(setCurrentModal('newArticleModal'))}
+            >
+              <img src={icon02} alt="home" />
             </div>
-            <div className={styles.footer__img}>
-              <NavLink to={'/myProfile'}>
-                <img src={icon03} alt="home" />
-              </NavLink>
+            <div
+              className={styles.footer__img}
+              onClick={() => {
+                if (isAuth) {
+                  navigate(`/myProfile`, {
+                    replace: true,
+                  })
+                } else {
+                  setCurrentModal('authModal')
+                }
+              }}
+            >
+              <img src={icon03} alt="home" />
             </div>
           </div>
         </footer>
