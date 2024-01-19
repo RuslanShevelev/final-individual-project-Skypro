@@ -66,6 +66,7 @@
 .article {
   &__left {
     max-width: 480px;
+    max-height: 598px;
     margin-right: 54px;
   }
 
@@ -74,52 +75,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  &__img {
-    width: 480px;
-    height: 480px;
-    background-color: #f0f0f0;
-    margin: 0 5px;
-
-    & img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-    }
-  }
-  // &__imgBarMob {
-  //   display: none;
-  // }
-  &__imgBar {
-    margin-top: 30px;
-    width: 490px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-    overflow: hidden;
-    margin-left: -5px;
-  }
-
-  &__imgBarDiv {
-    width: 88px;
-    min-width: 88px;
-    height: 88px;
-    background-color: #f0f0f0;
-    border: 2px solid #f0f0f0;
-    margin: 0 5px;
-    transition: all 0.3s;
-    cursor: pointer;
-    &_active {
-      border: 3px solid #009ee4;
-      transform: scale(1.03);
-    }   
-     &:hover {
-      border: 2px solid #009ee4;
-      transform: scale(1.03);
-    }
     & img {
       width: 100%;
       height: 100%;
@@ -304,40 +259,6 @@
       align-items: center;
       justify-content: center;
       position: relative;
-    }
-
-    &__img {
-      width: 100%;
-      min-width: 320px;
-      height: auto;
-      min-height: 320px;
-      margin: 0 0px;
-    }
-
-    &__imgBar {
-      display: flex;
-      justify-content: center;
-      gap: 7px;
-      width: 68px;
-      height: 8px;
-      position: absolute;
-      bottom: 20px;
-      left: calc(50% - (68px / 2));
-    }
-    &__imgBarDiv {
-      min-width: 8px;
-      width: 8px;
-      height: 8px;
-      margin: 0;
-      border-radius: 50%;
-      border: 2px solid #ffffff;
-      background: #F0F0F0;
-      & img {
-        display: none;
-      }
-      &_active {
-          background-color: #ffffff;
-      }
     }
     &__right {
       max-width: 100%;

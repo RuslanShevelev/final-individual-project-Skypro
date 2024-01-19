@@ -9,6 +9,7 @@ import {
 } from 'store/slices/modalsSlice'
 import { commentsNumber } from 'helpers/commentsNumber'
 import styles from '../css/article.module.scss'
+import '../css/fancy.css'
 import classNames from 'classnames'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -22,6 +23,8 @@ import {
 } from 'services/appService'
 import noPhoto from '../img/no-image-large.png'
 import { useAuth } from 'hooks/use-auth'
+import Carousel from 'components/fancybox/Carousel'
+import Fancybox from 'components/fancybox/fancybox'
 
 export const Article = () => {
   const dispatch = useDispatch()
@@ -31,7 +34,6 @@ export const Article = () => {
   const params = useParams()
   const comments = useGetCommentsByIdQuery(Number(params.id)).data
   const [phoneVisibility, setPhoneVisibility] = useState(false)
-  const [activeImg, setActiveImg] = useState(null)
   const { currentArt: data, loading } = useSelector((state) => state.modals)
   const [deleteArticle, deleteing] = useDeleteArticleMutation()
 
@@ -48,14 +50,10 @@ export const Article = () => {
   }, [loading, deleteing])
 
   useEffect(() => {
-    if (data?.images[0]) {
-      setActiveImg(data.images[0])
-    }
     if (data?.user?.id === myId) {
       setMyArticle(true)
     }
     return () => {
-      setActiveImg(null)
       setMyArticle(false)
     }
   }, [data, myId])
@@ -70,57 +68,48 @@ export const Article = () => {
         <div className={classNames(styles.artic__content, styles.article)}>
           <div className={styles.article__left}>
             <div className={styles.article__fillImg}>
-              <MobileButton
-                color={'white'}
-                action={() => {
-                  navigate(myArticle ? `/myProfile` : '/', {
-                    replace: true,
-                  })
-                }}
-              />
-              <div className={styles.article__img}>
-                {data ? (
-                  <img
-                    src={
-                      activeImg
-                        ? `http://localhost:8090/${activeImg?.url}`
-                        : noPhoto
-                    }
-                    alt="active image"
+              {loading ? (
+                <Skeleton width={480} height={480} />
+              ) : data?.images?.length ? (
+                <>
+                  <MobileButton
+                    color={'white'}
+                    action={() => {
+                      navigate(myArticle ? `/myProfile` : '/', {
+                        replace: true,
+                      })
+                    }}
                   />
-                ) : (
-                  <Skeleton width={480} height={480} />
-                )}
-              </div>
-              <ul className={styles.article__imgBar}>
-                {data
-                  ? data?.images?.map((item) => (
-                      <li
-                        key={item.id}
-                        className={
-                          item.url === activeImg?.url
-                            ? classNames(
-                                styles.article__imgBarDiv,
-                                styles.article__imgBarDiv_active,
-                              )
-                            : styles.article__imgBarDiv
-                        }
-                        onClick={() => setActiveImg(item)}
-                      >
-                        <img src={`http://localhost:8090/${item.url}`} alt="" />
-                      </li>
-                    ))
-                  : Array(5)
-                      .fill()
-                      .map(() => (
-                        <li
-                          key={Math.random()}
-                          className={styles.article__imgBarDiv}
+                  <Fancybox
+                    options={{
+                      Carousel: {
+                        infinite: false,
+                      },
+                    }}
+                  >
+                    <Carousel options={{ infinite: false }}>
+                      {data?.images?.map((item) => (
+                        <div
+                          key={item.id}
+                          className="f-carousel__slide"
+                          data-fancybox="gallery"
+                          data-src={`http://localhost:8090/${item.url}`}
+                          data-thumb-src={`http://localhost:8090/${item.url}`}
                         >
-                          <Skeleton width={88} height={88} />
-                        </li>
+                          <img
+                            src={`http://localhost:8090/${item.url}`}
+                            width="200"
+                            height="150"
+                            alt=""
+                          />
+                        </div>
                       ))}
-              </ul>
+                    </Carousel>
+                  </Fancybox>
+                </>
+              ) : (
+                <img src={noPhoto} alt="active image" />
+              )}
             </div>
           </div>
           <div className={styles.article__right}>

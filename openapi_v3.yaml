@@ -7,7 +7,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0
   termsOfService: urn:tos
   title: Api Documentation
-  version: '1.0'
+  version: "1.0"
 servers:
   - url: //localhost:8080/
 tags:
@@ -22,25 +22,25 @@ paths:
     get:
       operationId: getALLAdsUsingGET
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ResponseWrapper«Ads»'
+                $ref: "#/components/schemas/ResponseWrapper«Ads»"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getALLAds
       tags:
         - Объявления
-      x-accepts: '*/*'
+      x-accepts: "*/*"
     post:
       description: Добавить объявления
       operationId: addAdsUsingPOST
@@ -54,27 +54,27 @@ paths:
               type: object
               properties:
                 properties:
-                  $ref: '#/components/schemas/CreateAds'
+                  $ref: "#/components/schemas/CreateAds"
                 image:
                   type: string
                   format: binary
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/Ads'
+                $ref: "#/components/schemas/Ads"
           description: OK
-        '201':
+        "201":
           content: {}
           description: Created
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: addAds
@@ -82,7 +82,7 @@ paths:
         - Объявления
       x-codegen-request-body-name: createAds
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /ads/me:
     get:
       operationId: getAdsMeUsingGET
@@ -108,25 +108,25 @@ paths:
           schema:
             type: object
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ResponseWrapper«Ads»'
+                $ref: "#/components/schemas/ResponseWrapper«Ads»"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getAdsMe
       tags:
         - Объявления
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /ads/{ad_pk}/comment:
     get:
       operationId: getAdsCommentsUsingGET
@@ -138,25 +138,25 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ResponseWrapper«AdsComment»'
+                $ref: "#/components/schemas/ResponseWrapper«AdsComment»"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getAdsComments
       tags:
         - Объявления
-      x-accepts: '*/*'
+      x-accepts: "*/*"
     post:
       operationId: addAdsCommentsUsingPOST
       parameters:
@@ -170,26 +170,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdsComment'
+              $ref: "#/components/schemas/AdsComment"
         description: comment
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/AdsComment'
+                $ref: "#/components/schemas/AdsComment"
           description: OK
-        '201':
+        "201":
           content: {}
           description: Created
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: addAdsComments
@@ -197,7 +197,7 @@ paths:
         - Объявления
       x-codegen-request-body-name: comment
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /ads/{ad_pk}/comment/{id}:
     delete:
       operationId: deleteAdsCommentUsingDELETE
@@ -216,13 +216,13 @@ paths:
             format: int32
             type: integer
       responses:
-        '204':
+        "204":
           content: {}
           description: No Content
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
       summary: deleteAdsComment
@@ -246,25 +246,25 @@ paths:
             format: int32
             type: integer
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/AdsComment'
+                $ref: "#/components/schemas/AdsComment"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getAdsComment
       tags:
         - Объявления
-      x-accepts: '*/*'
+      x-accepts: "*/*"
     patch:
       operationId: updateAdsCommentUsingPATCH
       parameters:
@@ -285,23 +285,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdsComment'
+              $ref: "#/components/schemas/AdsComment"
         description: comment
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/AdsComment'
+                $ref: "#/components/schemas/AdsComment"
           description: OK
-        '204':
+        "204":
           content: {}
           description: No Content
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
       summary: updateAdsComment
@@ -309,7 +309,7 @@ paths:
         - Объявления
       x-codegen-request-body-name: comment
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /ads/{id}:
     delete:
       operationId: removeAdsUsingDELETE
@@ -322,13 +322,13 @@ paths:
             format: int32
             type: integer
       responses:
-        '204':
+        "204":
           content: {}
           description: No Content
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
       summary: removeAds
@@ -346,25 +346,25 @@ paths:
             format: int32
             type: integer
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/FullAds'
+                $ref: "#/components/schemas/FullAds"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getAds
       tags:
         - Объявления
-      x-accepts: '*/*'
+      x-accepts: "*/*"
     patch:
       operationId: updateAdsUsingPATCH
       parameters:
@@ -379,23 +379,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Ads'
+              $ref: "#/components/schemas/Ads"
         description: ads
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/Ads'
+                $ref: "#/components/schemas/Ads"
           description: OK
-        '204':
+        "204":
           content: {}
           description: No Content
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
       summary: updateAds
@@ -403,7 +403,7 @@ paths:
         - Объявления
       x-codegen-request-body-name: ads
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /login:
     post:
       operationId: loginUsingPOST
@@ -411,26 +411,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginReq'
+              $ref: "#/components/schemas/LoginReq"
         description: req
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
                 type: object
           description: OK
-        '201':
+        "201":
           content: {}
           description: Created
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: login
@@ -438,7 +438,7 @@ paths:
         - Авторизация
       x-codegen-request-body-name: req
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /register:
     post:
       operationId: registerUsingPOST
@@ -446,26 +446,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegReq'
+              $ref: "#/components/schemas/RegReq"
         description: req
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
                 type: object
           description: OK
-        '201':
+        "201":
           content: {}
           description: Created
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: register
@@ -473,53 +473,53 @@ paths:
         - Авторизация
       x-codegen-request-body-name: req
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /users/me:
     get:
       operationId: getUsersUsingGET
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ResponseWrapper«User»'
+                $ref: "#/components/schemas/ResponseWrapper«User»"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getUsers
       tags:
         - Пользователи
-      x-accepts: '*/*'
+      x-accepts: "*/*"
     patch:
       operationId: updateUserUsingPATCH
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
         description: user
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
           description: OK
-        '204':
+        "204":
           content: {}
           description: No Content
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
       summary: updateUser
@@ -527,7 +527,7 @@ paths:
         - Пользователи
       x-codegen-request-body-name: user
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /users/set_password:
     post:
       operationId: setPasswordUsingPOST
@@ -535,26 +535,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewPassword'
+              $ref: "#/components/schemas/NewPassword"
         description: newPassword
         required: true
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/NewPassword'
+                $ref: "#/components/schemas/NewPassword"
           description: OK
-        '201':
+        "201":
           content: {}
           description: Created
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: setPassword
@@ -562,7 +562,7 @@ paths:
         - Пользователи
       x-codegen-request-body-name: newPassword
       x-contentType: application/json
-      x-accepts: '*/*'
+      x-accepts: "*/*"
   /users/{id}:
     get:
       operationId: getUserUsingGET
@@ -575,25 +575,25 @@ paths:
             format: int32
             type: integer
       responses:
-        '200':
+        "200":
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
           description: OK
-        '401':
+        "401":
           content: {}
           description: Unauthorized
-        '403':
+        "403":
           content: {}
           description: Forbidden
-        '404':
+        "404":
           content: {}
           description: Not Found
       summary: getUser
       tags:
         - Пользователи
-      x-accepts: '*/*'
+      x-accepts: "*/*"
 components:
   schemas:
     Ads:
@@ -770,7 +770,7 @@ components:
           type: integer
         results:
           items:
-            $ref: '#/components/schemas/AdsComment'
+            $ref: "#/components/schemas/AdsComment"
           type: array
       title: ResponseWrapper«AdsComment»
       type: object
@@ -794,7 +794,7 @@ components:
           type: integer
         results:
           items:
-            $ref: '#/components/schemas/Ads'
+            $ref: "#/components/schemas/Ads"
           type: array
       title: ResponseWrapper«Ads»
       type: object
@@ -818,7 +818,7 @@ components:
           type: integer
         results:
           items:
-            $ref: '#/components/schemas/User'
+            $ref: "#/components/schemas/User"
           type: array
       title: ResponseWrapper«User»
       type: object
@@ -843,4 +843,4 @@ components:
           type: string
       title: User
       type: object
-x-original-swagger-version: '2.0'
+x-original-swagger-version: "2.0"

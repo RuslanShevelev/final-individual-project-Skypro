@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fancyapps/ui": "^5.0.33",
     "@reduxjs/toolkit": "^2.0.1",
     "classnames": "^2.3.2",
     "date-fns": "^3.0.6",
