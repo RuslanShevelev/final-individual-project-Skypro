@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { findArticles, setCurrentModal } from 'store/slices/modalsSlice'
-import { Outlet, useNavigate, NavLink } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import styles from '../css/layout.module.scss'
 import icon01 from '../img/icon_01.png'
 import icon02 from '../img/icon_02.png'
@@ -86,14 +86,26 @@ export const Layout = () => {
         )}
         <footer className={styles.footer}>
           <div className={styles.footer__container}>
-            <div className={styles.footer__img}>
-              <NavLink to={`/`}>
-                <img src={icon01} alt="home" />
-              </NavLink>
+            <div
+              className={styles.footer__img}
+              onClick={() => {
+                dispatch(setCurrentModal(''))
+                navigate(`/`, {
+                  replace: true,
+                })
+              }}
+            >
+              <img src={icon01} alt="home" />
             </div>
             <div
               className={styles.footer__img}
-              onClick={() => dispatch(setCurrentModal('newArticleModal'))}
+              onClick={() => {
+                if (isAuth) {
+                  dispatch(setCurrentModal('newArticleModal'))
+                } else {
+                  dispatch(setCurrentModal('authModal'))
+                }
+              }}
             >
               <img src={icon02} alt="home" />
             </div>
@@ -101,11 +113,12 @@ export const Layout = () => {
               className={styles.footer__img}
               onClick={() => {
                 if (isAuth) {
+                  dispatch(setCurrentModal(''))
                   navigate(`/myProfile`, {
                     replace: true,
                   })
                 } else {
-                  setCurrentModal('authModal')
+                  dispatch(setCurrentModal('authModal'))
                 }
               }}
             >

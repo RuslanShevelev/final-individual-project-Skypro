@@ -16,7 +16,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { formatRelative, format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { MyButton } from 'components/buttons/button'
-import { MobileButton } from 'components/buttons/mobileBtn'
+// import { MobileButton } from 'components/buttons/mobileBtn'
 import {
   useGetCommentsByIdQuery,
   useDeleteArticleMutation,
@@ -72,14 +72,14 @@ export const Article = () => {
                 <Skeleton width={480} height={480} />
               ) : data?.images?.length ? (
                 <>
-                  <MobileButton
+                  {/* <MobileButton
                     color={'white'}
                     action={() => {
                       navigate(myArticle ? `/myProfile` : '/', {
                         replace: true,
                       })
                     }}
-                  />
+                  /> */}
                   <Fancybox
                     options={{
                       Carousel: {
@@ -155,7 +155,8 @@ export const Article = () => {
                 {!myArticle ? (
                   <button
                     className={classNames(styles.article__btn, styles.btnHov02)}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault()
                       setPhoneVisibility(!phoneVisibility)
                     }}
                   >
